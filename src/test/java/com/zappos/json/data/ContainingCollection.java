@@ -1,4 +1,4 @@
-package com.zappos.jacinda.data;
+package com.zappos.json.data;
 
 import java.util.ArrayList;
 import java.util.Collection;

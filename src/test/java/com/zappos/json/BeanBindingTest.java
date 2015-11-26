@@ -10,12 +10,12 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.zappos.jacinda.data.ContainingArray;
-import com.zappos.jacinda.data.ContainingCollection;
-import com.zappos.jacinda.data.ContainingFormattableObject;
-import com.zappos.jacinda.data.ContainingMap;
-import com.zappos.jacinda.data.NestedBean;
-import com.zappos.jacinda.data.SimpleBean;
+import com.zappos.json.data.ContainingArray;
+import com.zappos.json.data.ContainingCollection;
+import com.zappos.json.data.ContainingFormattableObject;
+import com.zappos.json.data.ContainingMap;
+import com.zappos.json.data.NestedBean;
+import com.zappos.json.data.SimpleBean;
 
 /**
  * 
@@ -133,7 +133,7 @@ public class BeanBindingTest extends AbstractBaseTest {
     Assert.assertEquals(bean.getIntMap(), bean2.getIntMap());
     SimpleBean a = bean.getMapOfObject().get("S1");
     SimpleBean b = bean2.getMapOfObject().get("S1");
-//    Assert.assertEquals(bean.getMapOfObject().get("S1"), bean2.getMapOfObject().get("S1"));
+    Assert.assertEquals(a, b);
     Assert.assertArrayEquals(bean.getMapOfArray().get("A1"), bean2.getMapOfArray().get("A1"));
     Assert.assertArrayEquals(bean.getMapOfArray().get("A2"), bean2.getMapOfArray().get("A2"));
   }

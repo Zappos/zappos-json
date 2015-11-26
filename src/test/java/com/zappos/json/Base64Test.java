@@ -5,7 +5,7 @@ import java.util.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.zappos.jacinda.data.ByteArrayBean;
+import com.zappos.json.data.ByteArrayBean;
 
 public class Base64Test extends AbstractBaseTest {
   

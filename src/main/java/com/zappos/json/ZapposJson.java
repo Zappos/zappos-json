@@ -41,6 +41,7 @@ public class ZapposJson {
   private JsonReaderCodeGenerator readerCodeGenerator;
   
   protected ZapposJson() {
+    
     addValueFormatter(Date.class, new JavaDateFormatter());
     addValueFormatter(java.sql.Date.class, new JavaSqlDateFormatter());
     addValueFormatter(java.sql.Timestamp.class, new JavaTimestampFormatter());
@@ -163,7 +164,7 @@ public class ZapposJson {
       if(readerInvoker == null){
           readerInvoker = readerCodeGenerator.registerReader(targetClass);
       }
-      return (T) readerInvoker.readJson(json, targetClass);
+      return readerInvoker.readJson(json, targetClass);
     }catch(Exception e){
       throw new JsonException(e);
     }
@@ -175,7 +176,7 @@ public class ZapposJson {
       if(readerInvoker == null){
         readerInvoker = readerCodeGenerator.registerReader(targetClass);
       }
-      return (T) readerInvoker.readJson(reader, targetClass);
+      return readerInvoker.readJson(reader, targetClass);
     }catch(Exception e){
       throw new JsonException(e);
     }

@@ -6,11 +6,11 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.zappos.jacinda.data.JsonEnumBean;
-import com.zappos.jacinda.data.JsonFormatBean;
-import com.zappos.jacinda.data.JsonIgnoreBean;
-import com.zappos.jacinda.data.JsonKeyBean;
-import com.zappos.jacinda.data.JsonEnumBean.MyEnum;
+import com.zappos.json.data.JsonEnumBean;
+import com.zappos.json.data.JsonFormatBean;
+import com.zappos.json.data.JsonIgnoreBean;
+import com.zappos.json.data.JsonKeyBean;
+import com.zappos.json.data.JsonEnumBean.MyEnum;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.zappos.jacinda.data;
+package com.zappos.json.data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

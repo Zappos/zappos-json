@@ -1,7 +1,7 @@
 package com.zappos.json;
 
-import com.zappos.jacinda.data.SimpleBean;
 import com.zappos.json.ZapposJson;
+import com.zappos.json.data.SimpleBean;
 
 /**
  * 
