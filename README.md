@@ -1,6 +1,3 @@
-## This project is in development ##
-* The code is in incubating branch. *
-
 #Zappos JSON#
 
 Zappos JSON is yet another JSON serializer/de-serializer. It uses code generation technique instead of
