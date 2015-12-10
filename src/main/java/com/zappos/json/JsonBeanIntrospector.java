@@ -47,6 +47,7 @@ public class JsonBeanIntrospector {
   
   @SuppressWarnings("unchecked")
   private List<JsonBeanAttribute> getAccessorsOrMutators(Class<?> clazz, boolean accessor){
+    
     List<JsonBeanAttribute> attributes = new ArrayList<>();
     try {
       for (PropertyDescriptor propertyDescriptor : Introspector

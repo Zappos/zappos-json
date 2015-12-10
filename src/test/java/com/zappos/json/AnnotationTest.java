@@ -22,10 +22,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.zappos.json.data.JsonEnumBean;
+import com.zappos.json.data.JsonEnumBean.MyEnum;
 import com.zappos.json.data.JsonFormatBean;
 import com.zappos.json.data.JsonIgnoreBean;
 import com.zappos.json.data.JsonKeyBean;
-import com.zappos.json.data.JsonEnumBean.MyEnum;
 
 /**
  * 
@@ -110,17 +110,9 @@ public class AnnotationTest extends AbstractBaseTest {
     System.out.println(json);
     
     JsonEnumBean bean2 = jacinda.fromJson(json, JsonEnumBean.class);
+    Assert.assertTrue(bean2.getDefaultEnum() == MyEnum.FIRST);
+    Assert.assertTrue(bean2.getOrdinalEnum() == MyEnum.SECOND);
+    Assert.assertTrue(bean2.getStringEnum() == MyEnum.THIRD);
   }
   
-  public static void main(String[] args) {
-    JsonEnumBean bean = new JsonEnumBean();
-    bean.setDefaultEnum(MyEnum.FIRST);
-    bean.setOrdinalEnum(MyEnum.SECOND);
-    bean.setStringEnum(MyEnum.THIRD);
-    
-    String json = jacinda.toJson(bean);
-    System.out.println(json);
-    
-    JsonEnumBean bean2 = jacinda.fromJson(json, JsonEnumBean.class);
-  }
 }

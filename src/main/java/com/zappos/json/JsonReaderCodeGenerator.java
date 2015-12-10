@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.zappos.json.format.ValueFormatter;
-import com.zappos.json.util.Reflections;
-import com.zappos.json.util.Strings;
-import com.zappos.json.util.TypeImpl;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+
+import com.zappos.json.annot.JsonEnum.EnumValue;
+import com.zappos.json.util.Reflections;
+import com.zappos.json.util.Strings;
+import com.zappos.json.util.TypeImpl;
 
 /**
  * 
@@ -132,63 +132,63 @@ public class JsonReaderCodeGenerator {
   }
   
   
-  private List<PathAndCode> generateJsonReaderBody(Class<?> clazz)
-      throws Exception {
+  private List<PathAndCode> generateJsonReaderBody(Class<?> clazz) throws Exception {
 
     List<PathAndCode> pathAndCodes = new ArrayList<>();
-    Map<String, TypeMapping> typeMappings = new HashMap<>();
+    Map<String, TypeInfo> typeInfos = new HashMap<>();
 
-    traverseObjectTree(clazz, new String[JsonReader.MAX_OBJECT_TREE_DEEP], 1, typeMappings);
+    traverseObjectTree(clazz, new String[JsonReader.MAX_OBJECT_TREE_DEEP], 1, typeInfos);
 
-    for (Map.Entry<String, TypeMapping> entry : typeMappings.entrySet()) {
+    for (Map.Entry<String, TypeInfo> entry : typeInfos.entrySet()) {
 
       jacinda.debug("Path: @, Mapping: @", entry.getKey(), entry.getValue());
 
       String path = entry.getKey();
-      TypeMapping mapping = entry.getValue();
-      String typeName = mapping.getType().getName();
+      TypeInfo typeInfo = entry.getValue();
+      String typeName = typeInfo.getType().getName();
 
       String code = typeName + " __o = new " + typeName + "();\n";
 
-      for (AttributeMapping attrMapping : mapping.getAttributeMappings()) {
-
-        String writeMethodName = attrMapping.getWriteMethod().getName();
-        String jsonKey = attrMapping.getJsonKey();
+      for (AttributeInfo attrInfo: typeInfo.getAttributeInfos()) {
+        
+        Method writeMethod = attrInfo.getDetail().getMethod();
+        String jsonKey = attrInfo.getDetail().getJsonKey();
+        String writeMethodName = writeMethod.getName();
         String valueName = Character.toLowerCase(writeMethodName.charAt(3))
             + writeMethodName.substring(4);
         String tmpValueName = "_" + valueName;
-        Class<?> attrType = attrMapping.getAttributeType();
+        Class<?> attrType = attrInfo.getAttributeType();
         code += "Object " + tmpValueName + " = $2.get(\"" + jsonKey + "\");\n";
         code += "if(" + tmpValueName + " != null){\n";
 
         if (attrType.isArray()
-            || attrMapping.getArrayType() == 1) { /* native array type */
+            || attrInfo.getArrayType() == 1) { /* native array type */
           /*
            * Note: javassist doesn't understand syntax after Java 1.4
            */
-          Class<?> componentType = (attrMapping.getArrayType() == 1) ? attrType : attrType.getComponentType();
+          Class<?> componentType = (attrInfo.getArrayType() == 1) ? attrType : attrType.getComponentType();
           if(componentType == byte.class){
             code += "byte "+valueName+"[] =  javax.xml.bind.DatatypeConverter.parseBase64Binary((String)"+tmpValueName+");\n";
           }else{
-            code += generateArrayFromListCode(componentType, valueName, tmpValueName);
+            code += generateArrayFromListCode(attrInfo.getDetail(), componentType, valueName, tmpValueName);
           }
         } else if (Iterable.class.isAssignableFrom(attrType)
-            || attrMapping.getArrayType() == 2) { /* collection type */
+            || attrInfo.getArrayType() == 2) { /* collection type */
           Class<?> collectionType = null;
           Class<?> componentType = null;
-          if (attrMapping.getArrayType() == 2) {
+          if (attrInfo.getArrayType() == 2) {
             /* collection of object */
             componentType = attrType;
-            collectionType = attrMapping.getCollectionType();
+            collectionType = attrInfo.getCollectionType();
           } else {
-            componentType = Reflections.getFirstGenericParameterType(attrMapping.getWriteMethod());
+            componentType = Reflections.getFirstGenericParameterType(writeMethod);
             collectionType = attrType;
           }
-          code += generateCollectionCode(collectionType, componentType, valueName, tmpValueName);
+          code += generateCollectionCode(attrInfo.getDetail(), collectionType, componentType, valueName, tmpValueName);
           
         } else if (Map.class.isAssignableFrom(attrType)) { /* map type */
           
-          Class<?> componentType = Reflections.getSecondGenericParameterType(attrMapping.getWriteMethod());
+          Class<?> componentType = Reflections.getSecondGenericParameterType(writeMethod);
           if (componentType == null) {
             throw new RuntimeException("Cannot find type of Map");
           }
@@ -210,24 +210,24 @@ public class JsonReaderCodeGenerator {
           }else if(jsonType == JsonType.ARRAY){
             if(componentType.isArray()){
               componentType = componentType.getComponentType();
-              code += generateArrayFromListCode(componentType, "_m2", "_m1");
+              code += generateArrayFromListCode(attrInfo.getDetail(), componentType, "_m2", "_m1");
             }else{
               throw new RuntimeException("Map of collection not support");
             }
           }else{
-            code += generateTypeConversionCode(componentType, "_m2", "_m1");
+            code += generateTypeConversionCode(attrInfo.getDetail(), componentType, "_m2", "_m1");
           }
           code += valueName + ".put(_key, _m2);\n";
           code += "}\n";
           
-        } else if(attrMapping.getFormatterClass() != null){
-          
-            String formatterClassName = attrMapping.getFormatterClass().getName();
+        } else if(attrInfo.getDetail().getFormatterClass() != null){
+            
+            String formatterClassName = attrInfo.getDetail().getFormatterClass().getName();
             String formatterVar = Strings.randomAlphabetic(6)+"_fmt";
             code += formatterClassName + " " + formatterVar + " = new " + formatterClassName + "();\n";
             
-            if(attrMapping.getFormatterPattern() != null){
-              code += formatterVar + ".setPattern(\"" + attrMapping.getFormatterPattern() + "\");\n";
+            if(attrInfo.getDetail().getFormatterPattern() != null){
+              code += formatterVar + ".setPattern(\"" + attrInfo.getDetail().getFormatterPattern() + "\");\n";
             }
             
             code += attrType.getName() + " " + valueName + " = (" + attrType.getName()
@@ -235,7 +235,7 @@ public class JsonReaderCodeGenerator {
             
         } else {
           
-          code += generateTypeConversionCode(attrType, valueName, tmpValueName);
+          code += generateTypeConversionCode(attrInfo.getDetail(), attrType, valueName, tmpValueName);
           
         }
         
@@ -253,9 +253,9 @@ public class JsonReaderCodeGenerator {
     return pathAndCodes;
 
   }
-
+  
   private void traverseObjectTree(Class<?> clazz, String paths[], int level,
-      Map<String, TypeMapping> typeMappings) throws Exception {
+      Map<String, TypeInfo> typeInfos) throws Exception {
 
     List<JsonBeanAttribute> attributes = beanIntrospector.getMutators(clazz);
     
@@ -305,25 +305,29 @@ public class JsonReaderCodeGenerator {
           || collectionOfObject) {
         paths[level] = jsonKey;
         String path = getObjectAccessPath(paths, level);
-        TypeMapping typeMapping = getTypeMapping(typeMappings, path, clazz);
-        AttributeMapping attrMapping = typeMapping.addAttributeMapping(attrType, writeMethod, jsonKey);
+        TypeInfo typeInfo = getTypeInfo(typeInfos, path, clazz);
+        AttributeInfo attrInfo = typeInfo.addAttributeInfo(attrType, beanAttr);
         if (arrayOfObject) {
-          attrMapping.setArrayType(1);
+          attrInfo.setArrayType(1);
         } else if (collectionOfObject) {
-          attrMapping.setArrayType(2).setCollectionType(collectionType);
+          attrInfo.setArrayType(2).setCollectionType(collectionType);
         }
-        traverseObjectTree(attrType, paths, level + 1, typeMappings);
+        traverseObjectTree(attrType, paths, level + 1, typeInfos);
       } else {
         String path = getObjectAccessPath(paths, level);
-        TypeMapping typeMapping = getTypeMapping(typeMappings, path, clazz);
-        AttributeMapping attrMapping = typeMapping.addAttributeMapping(attrType, writeMethod, jsonKey);
-        attrMapping.setFormatterClass(beanAttr.getFormatterClass())
-          .setFormatterPattern(beanAttr.getFormatterPattern());
+        TypeInfo typeInfo = getTypeInfo(typeInfos, path, clazz);
+        typeInfo.addAttributeInfo(attrType, beanAttr);
       }
     }
 
   }
 
+  /**
+   * 
+   * @param paths
+   * @param level
+   * @return
+   */
   private String getObjectAccessPath(String paths[], int level) {
 
     if (level == 1)
@@ -337,21 +341,36 @@ public class JsonReaderCodeGenerator {
 
   }
 
-  private TypeMapping getTypeMapping(Map<String, TypeMapping> typeMaps,
-      String path, Class<?> superType) {
+  /**
+   * Get the TypeInfo object from specified path or return the new one if it does not exist.
+   * @param typeMaps
+   * @param path
+   * @param superType
+   * @return
+   */
+  private TypeInfo getTypeInfo(Map<String, TypeInfo> typeMaps, String path, Class<?> superType) {
 
-    TypeMapping typeMapping = typeMaps.get(path);
-    if (typeMapping == null) {
-      typeMapping = new TypeMapping(superType);
-      typeMaps.put(path, typeMapping);
+    TypeInfo typeInfo = typeMaps.get(path);
+    if (typeInfo == null) {
+      typeInfo = new TypeInfo(superType);
+      typeMaps.put(path, typeInfo);
     }
 
-    return typeMapping;
+    return typeInfo;
 
   }
   
-  private String generateCollectionCode(Class<?> collectionType, Class<?> componentType,
+  /**
+   * 
+   * @param collectionType
+   * @param componentType
+   * @param valueName
+   * @param tmpValueName
+   * @return
+   */
+  private String generateCollectionCode(JsonBeanAttribute beanAttr, Class<?> collectionType, Class<?> componentType,
       String valueName, String tmpValueName){
+    
     if (componentType == null) {
       throw new RuntimeException("Cannot find type of Collection");
     }
@@ -362,14 +381,21 @@ public class JsonReaderCodeGenerator {
         + " = new " + typeImpl.getImplClass().getName() + "();\n";
     code += "for(int _i = 0; _i < " + tmpValueName + "_list.size(); _i++){\n";
     code += "Object _l1 = " + tmpValueName + "_list.get(_i);\n";
-    code += generateTypeConversionCode(componentType, "_l2", "_l1");
+    code += generateTypeConversionCode(beanAttr, componentType, "_l2", "_l1");
     code += valueName + ".add(_l2);\n";
     code += "}\n";
     return code;
   }
   
-  private String generateArrayFromListCode(Class<?> attrType, String valueName,
-      String tmpValueName) {
+  /**
+   * 
+   * @param attrType
+   * @param valueName
+   * @param tmpValueName
+   * @return
+   */
+  private String generateArrayFromListCode(JsonBeanAttribute beanAttr, Class<?> attrType, 
+      String valueName, String tmpValueName) {
 
     String code = "";
     code += "List " + tmpValueName + "_list = (List)" + tmpValueName + ";\n";
@@ -377,7 +403,7 @@ public class JsonReaderCodeGenerator {
             + attrType.getName() + "[" + tmpValueName + "_list.size()];\n";
     code += "for(int _i = 0; _i < " + tmpValueName + "_list.size(); _i++){\n";
     code += "Object _l1 = " + tmpValueName + "_list.get(_i);\n";
-    code += generateTypeConversionCode(attrType, "_l2", "_l1");
+    code += generateTypeConversionCode(beanAttr, attrType, "_l2", "_l1");
     code += valueName + "[_i] = _l2;\n";
     code += "}\n";
     code += "";
@@ -385,8 +411,15 @@ public class JsonReaderCodeGenerator {
 
   }
 
-  private String generateTypeConversionCode(Class<?> attrType, String valueName,
-      String tmpValueName) {
+  /**
+   * 
+   * @param attrType
+   * @param valueName
+   * @param tmpValueName
+   * @return
+   */
+  private String generateTypeConversionCode(JsonBeanAttribute beanAttr, Class<?> attrType, 
+      String valueName, String tmpValueName) {
 
     String valueDeclaration = null;
 
@@ -434,6 +467,13 @@ public class JsonReaderCodeGenerator {
     } else if (attrType == String.class) {
       /* No need to parse. The type is already String */
       valueDeclaration = "String @ =  (String)@;\n";
+    } else if (attrType.isEnum()){
+      valueDeclaration = attrType.getName() + " @ = " + attrType.getCanonicalName();
+      if(beanAttr.getEnumValue() == null || beanAttr.getEnumValue() == EnumValue.STRING){ 
+        valueDeclaration += ".valueOf(String.valueOf(@));\n";
+      }else{
+        valueDeclaration += ".values()[Integer.parseInt((String)@)];\n";
+      }
     } else {
       // object?
       if (jacinda.getValueFormatter(attrType) != null) {
@@ -449,10 +489,21 @@ public class JsonReaderCodeGenerator {
     return Strings.format(valueDeclaration, valueName, tmpValueName);
   }
   
+  /**
+   * POJO bean storing attribute path and generated Java code.
+   * @author hussachai
+   *
+   */
   static class PathAndCode {
-
+    
+    /**
+     * Attribute path. The nested property name that is separated by dot notation.
+     */
     private String path;
 
+    /**
+     * Generated Java code for reading a value from JSON to a target type.
+     */
     private String code;
 
     public PathAndCode(String path, String code) {
@@ -495,39 +546,48 @@ public class JsonReaderCodeGenerator {
 
   }
 
-  static class TypeMapping {
+  /**
+   * 
+   * @author hussachai
+   *
+   */
+  static class TypeInfo {
 
     private Class<?> type;
 
-    private List<AttributeMapping> attrMappings = new ArrayList<>();
+    private List<AttributeInfo> attrInfos = new ArrayList<>();
 
-    public TypeMapping(Class<?> type) {
+    public TypeInfo(Class<?> type) {
       this.type = type;
     }
 
     @Override
     public String toString() {
-      return type.getSimpleName() + attrMappings;
+      return type.getSimpleName() + attrInfos;
     }
 
     public Class<?> getType() {
       return type;
     }
 
-    public AttributeMapping addAttributeMapping(Class<?> type,
-        Method writeMethod, String jsonKey) {
-      AttributeMapping attrMapping = new AttributeMapping(type, writeMethod, jsonKey);
-      attrMappings.add(attrMapping);
+    public AttributeInfo addAttributeInfo(Class<?> type, JsonBeanAttribute detail) {
+      AttributeInfo attrMapping = new AttributeInfo(type, detail);
+      attrInfos.add(attrMapping);
       return attrMapping;
     }
-
-    public List<AttributeMapping> getAttributeMappings() {
-      return attrMappings;
+    
+    public List<AttributeInfo> getAttributeInfos() {
+      return attrInfos;
     }
 
   }
 
-  static class AttributeMapping {
+  /**
+   * 
+   * @author hussachai
+   *
+   */
+  static class AttributeInfo {
 
     private Class<?> attrType;
 
@@ -536,31 +596,26 @@ public class JsonReaderCodeGenerator {
      * collection
      */
     private int arrayType = 0; 
-
+    
     private Class<?> collectionType;
-
-    private Method writeMethod;
-
-    private String jsonKey;
     
-    private Class<? extends ValueFormatter<?>> formatterClass;
+    private JsonBeanAttribute detail;
     
-    private String formatterPattern;
-    
-    public AttributeMapping(Class<?> attrType, Method writeMethod,
-        String jsonKey) {
+    public AttributeInfo(Class<?> attrType, JsonBeanAttribute detail) {
       this.attrType = attrType;
-      this.writeMethod = writeMethod;
-      this.jsonKey = jsonKey;
+      this.detail = detail;
     }
 
     @Override
     public String toString() {
-      return attrType.getSimpleName() + "#" + writeMethod.getName() + "->"
-          + jsonKey;
+      return attrType.getSimpleName() + "#" + detail.toString() + "->" + detail.getJsonKey();
     }
 
-    public AttributeMapping setArrayType(int arrayType) {
+    public JsonBeanAttribute getDetail(){
+      return detail;
+    }
+    
+    public AttributeInfo setArrayType(int arrayType) {
       this.arrayType = arrayType;
       return this;
     }
@@ -569,7 +624,7 @@ public class JsonReaderCodeGenerator {
       return arrayType;
     }
 
-    public AttributeMapping setCollectionType(Class<?> collectionType) {
+    public AttributeInfo setCollectionType(Class<?> collectionType) {
       this.collectionType = collectionType;
       return this;
     }
@@ -581,34 +636,6 @@ public class JsonReaderCodeGenerator {
     public Class<?> getAttributeType() {
       return attrType;
     }
-
-    public Method getWriteMethod() {
-      return writeMethod;
-    }
-
-    public String getJsonKey() {
-      return jsonKey;
-    }
-
-    public Class<? extends ValueFormatter<?>> getFormatterClass() {
-      return formatterClass;
-    }
-
-    public AttributeMapping setFormatterClass(
-        Class<? extends ValueFormatter<?>> formatterClass) {
-      this.formatterClass = formatterClass;
-      return this;
-    }
-
-    public String getFormatterPattern() {
-      return formatterPattern;
-    }
-
-    public AttributeMapping setFormatterPattern(String formatterPattern) {
-      this.formatterPattern = formatterPattern;
-      return this;
-    }
-    
     
   }
 }

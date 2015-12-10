@@ -54,24 +54,22 @@ public class JsonBeanAttribute {
     this.jsonKey = attributeKey;
   }
 
+  @Override
+  public String toString(){
+    if(field != null){
+      return field.getName();
+    }
+    return method.getName();
+  }
+  
   public Method getMethod() {
     return method;
   }
-
-  public JsonBeanAttribute setMethod(Method method) {
-    this.method = method;
-    return this;
-  }
-
+  
   public Field getField() {
     return field;
   }
-
-  public JsonBeanAttribute setField(Field field) {
-    this.field = field;
-    return this;
-  }
-
+  
   public String getAttributeKey() {
     return attributeKey;
   }
