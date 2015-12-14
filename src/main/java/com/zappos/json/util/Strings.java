@@ -21,7 +21,7 @@ import com.zappos.json.JsonWriter;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class Strings {

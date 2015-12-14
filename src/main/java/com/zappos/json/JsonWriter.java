@@ -17,12 +17,16 @@ package com.zappos.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.zappos.json.JsonConfig.WriterConfig;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonWriter {
@@ -78,15 +82,10 @@ public class JsonWriter {
     this.jacinda = jacinda;
   }
   
-  public static void writeString(byte value[], Writer writer) throws IOException {
+  public static void writeString(ZapposJson zapposJson, String value, Writer writer) throws IOException {
     writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
-    writer.write(DatatypeConverter.printBase64Binary(value));
-    writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
-  }
-  
-  public static void writeString(String value, Writer writer, boolean htmlSafe) throws IOException {
-    writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
-    String[] replacements = (htmlSafe) ? HTML_SAFE_REPLACEMENT_CHARS : REPLACEMENT_CHARS;
+    String[] replacements = (zapposJson.is(WriterConfig.WRITE_HTML_SAFE)) ? 
+        HTML_SAFE_REPLACEMENT_CHARS : REPLACEMENT_CHARS;
     int last = 0;
     int length = value.length();
     for (int i = 0; i < length; i++) {
@@ -116,4 +115,204 @@ public class JsonWriter {
     writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
   }
   
+  public static void writeBoolean(ZapposJson zapposJson, Boolean value, Writer writer) throws IOException {
+    writer.append(value.toString());
+  }
+  
+  public static void writeNumber(ZapposJson zapposJson, Number value, Writer writer) throws IOException {
+    writer.append(zapposJson.format(value));
+  }
+  
+  public static void writeEnum(ZapposJson zapposJson, Enum<?> value, Writer writer) throws IOException {
+    writeString(zapposJson, value.name(), writer);
+  }
+  
+  public static void writeIterable(ZapposJson zapposJson, Iterable<?> iterable, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    Iterator<?> iterator = iterable.iterator();
+    if(iterator.hasNext()){
+      zapposJson.toJson(iterator.next(), writer);
+    }
+    while(iterator.hasNext()){
+      writer.append(JsonWriter.CONST_COMMA);
+      zapposJson.toJson(iterator.next(), writer);
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  public static void writeMap(ZapposJson zapposJson, Map<?, ?> map, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_OBJECT);
+    boolean second = false;
+    for (Map.Entry<?, ?> entry : map.entrySet()) {
+      if(second){
+        writer.append(JsonWriter.CONST_COMMA);
+      }else{
+        second = true;
+      }
+      writer.append(JsonWriter.CONST_DOUBLE_QUOTE)
+          .append((String) entry.getKey())
+          .append(JsonWriter.CONST_DOUBLE_QUOTE)
+          .append(JsonWriter.CONST_COLON);
+      zapposJson.toJson(entry.getValue(), writer);
+    }
+    writer.append(JsonWriter.CONST_CLOSE_OBJECT);
+  }
+  
+  public static void writeArray(ZapposJson zapposJson, Object[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      zapposJson.toJson(values[i], writer);
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      zapposJson.toJson(values[j], writer);
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  public static void writeString(ZapposJson zapposJson, byte value[], Writer writer) throws IOException {
+    writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
+    writer.write(DatatypeConverter.printBase64Binary(value));
+    writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
+  }
+  
+  /*
+   * =========================== writeArray for native type ===================================
+   * TODO: How can we avoid duplicate code for array of native type?
+   * writeArray(byte[]) is not defined in a favor of writeString(byte[], writer) 
+   */
+  /**
+   * 
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(char[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(boolean[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(short[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(int[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(long[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(float[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param writer
+   * @throws IOException
+   */
+  public static void writeArray(double[] values, Writer writer) throws IOException {
+    writer.append(JsonWriter.CONST_OPEN_ARRAY);
+    int j = values.length - 1;
+    for (int i = 0; i < j; i++) {
+      writer.append(String.valueOf(values[i]));
+      writer.append(JsonWriter.CONST_COMMA);
+    }
+    if (j > -1) {
+      writer.append(String.valueOf(values[j]));
+    }
+    writer.append(JsonWriter.CONST_CLOSE_ARRAY);
+  }
 }

@@ -42,7 +42,7 @@ public class AnnotationTest extends AbstractBaseTest {
     bean.setIgnoreGetter("Ignore Getter");
     bean.setIgnoreSetter("Ignore Setter");
     
-    String json = jacinda.toJson(bean);
+    String json = zapposJson.toJson(bean);
     System.out.println(json);
     
     Assert.assertTrue(json.contains(bean.getCountMeIn()));
@@ -52,12 +52,10 @@ public class AnnotationTest extends AbstractBaseTest {
     
     json = "{\"countMeIn\":\"Count Me In\",\"ignoreMe\":\"Ignore Me\",\"ignoreGetter\":\"Ignore Getter\",\"ignoreSetter\":\"Ignore Setter\"}";
     
+    JsonIgnoreBean bean2 = zapposJson.fromJson(json, JsonIgnoreBean.class);
+    Assert.assertEquals(bean.getCountMeIn(), bean2.getCountMeIn());
     //TODO: should @JsonIgnore affect on writer only?
-    JsonIgnoreBean bean2 = jacinda.fromJson(json, JsonIgnoreBean.class);
-//    Assert.assertEquals(bean.getCountMeIn(), bean2.getCountMeIn());
-//    Assert.assertNotEquals(bean.getIgnoreMe(), bean2.getIgnoreMe());
-//    Assert.assertNull(bean2.getIgnoreMe());
-    
+    Assert.assertEquals(bean.getIgnoreMe(), bean2.getIgnoreMe());
   }
   
   @Test
@@ -67,14 +65,14 @@ public class AnnotationTest extends AbstractBaseTest {
     bean.setLastName("Voorhees");
     bean.setNickname(new JsonKeyBean.NickName());
     
-    String json = jacinda.toJson(bean);
+    String json = zapposJson.toJson(bean);
     System.out.println(json);
     Assert.assertTrue(json.contains("first_name"));
     Assert.assertTrue(json.contains("last_name"));
     Assert.assertTrue(json.contains("nick_name"));
     Assert.assertTrue(json.contains("short_name"));
     
-    JsonKeyBean bean2 = jacinda.fromJson(json, JsonKeyBean.class);
+    JsonKeyBean bean2 = zapposJson.fromJson(json, JsonKeyBean.class);
     Assert.assertEquals(bean.getFirstName(), bean2.getFirstName());
     Assert.assertEquals(bean.getLastName(), bean2.getLastName());
     Assert.assertEquals(bean.getNickname().getName(), bean2.getNickname().getName());
@@ -89,11 +87,11 @@ public class AnnotationTest extends AbstractBaseTest {
     /* custom formatter can apply new format pattern */
     bean.setDate2(new Date());
     
-    String json = jacinda.toJson(bean);
+    String json = zapposJson.toJson(bean);
     System.out.println(json);
     
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    JsonFormatBean bean2 = jacinda.fromJson(json, JsonFormatBean.class);
+    JsonFormatBean bean2 = zapposJson.fromJson(json, JsonFormatBean.class);
     Assert.assertEquals(sdf.format(bean.getDate()), sdf.format(bean2.getDate()));
     Assert.assertEquals(sdf.format(bean.getDate2()), sdf.format(bean2.getDate2()));
     Assert.assertEquals(sdf.format(JsonFormatBean.CustomDateFormatter.FIXED_DATE), sdf.format(bean2.getFixedDate()));
@@ -106,10 +104,10 @@ public class AnnotationTest extends AbstractBaseTest {
     bean.setOrdinalEnum(MyEnum.SECOND);
     bean.setStringEnum(MyEnum.THIRD);
     
-    String json = jacinda.toJson(bean);
+    String json = zapposJson.toJson(bean);
     System.out.println(json);
     
-    JsonEnumBean bean2 = jacinda.fromJson(json, JsonEnumBean.class);
+    JsonEnumBean bean2 = zapposJson.fromJson(json, JsonEnumBean.class);
     Assert.assertTrue(bean2.getDefaultEnum() == MyEnum.FIRST);
     Assert.assertTrue(bean2.getOrdinalEnum() == MyEnum.SECOND);
     Assert.assertTrue(bean2.getStringEnum() == MyEnum.THIRD);

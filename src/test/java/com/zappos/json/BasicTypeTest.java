@@ -22,6 +22,11 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * 
+ * @author hussachai
+ *
+ */
 public class BasicTypeTest extends AbstractBaseTest {
   
   @Test
@@ -31,7 +36,7 @@ public class BasicTypeTest extends AbstractBaseTest {
     simpleMap.put("A", "1");
     simpleMap.put("B", "2");
     
-    String json = jacinda.toJson(simpleMap);
+    String json = zapposJson.toJson(simpleMap);
     System.out.println(json);
     
     /* default implementation of Map is HashMap */

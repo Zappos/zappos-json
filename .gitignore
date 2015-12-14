@@ -10,4 +10,4 @@ target/
 .project
 
 src/test/java/testmain/
-
+src/test/java/com/zappos/json/Scratchpad.java

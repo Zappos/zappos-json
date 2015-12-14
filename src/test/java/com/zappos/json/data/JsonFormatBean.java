@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.zappos.json.ZapposJson;
 import com.zappos.json.annot.JsonFormat;
 import com.zappos.json.format.AbstractValueFormatter;
 import com.zappos.json.format.ValueFormatter;
@@ -36,14 +37,14 @@ public class JsonFormatBean {
       }
     }
     @Override
-    public String format(Date object) {
+    public String format(ZapposJson zapposJson, Date object) {
       if(getPattern() != null){
-        return toJson(new SimpleDateFormat(getPattern()).format(object));
+        return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
       }
-      return toJson(FIXED_DATE_STRING);
+      return toJson(zapposJson, FIXED_DATE_STRING);
     }
     @Override
-    public Date parse(String string) throws Exception {
+    public Date parse(ZapposJson zapposJson, String string) throws Exception {
       if(getPattern() != null){
         return new SimpleDateFormat(getPattern()).parse(string);
       }

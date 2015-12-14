@@ -33,19 +33,19 @@ import javassist.CtNewMethod;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonWriterCodeGenerator {
   
   private final Map<Class<?>, JsonWriterInvoker> JSON_WRITER_INVOKERS = new ConcurrentHashMap<>();
   
-  private ZapposJson jacinda;
+  private ZapposJson zapposJson;
   
   private JsonBeanIntrospector beanIntrospector;
   
-  public JsonWriterCodeGenerator(ZapposJson jacinda, JsonBeanIntrospector beanIntrospector){
-    this.jacinda = jacinda;
+  public JsonWriterCodeGenerator(ZapposJson zapposJson, JsonBeanIntrospector beanIntrospector){
+    this.zapposJson = zapposJson;
     this.beanIntrospector = beanIntrospector;
   }
   
@@ -93,11 +93,11 @@ public class JsonWriterCodeGenerator {
                 + " = " + fieldEntry.getValue() + ";", jsonCtClass));
       }
   
-      jacinda.debug("\nWriter code for \"@\"\n=========\n@\n=========\n", clazz,methodBody);
+      zapposJson.debug("\nWriter code for \"@\"\n=========\n@\n=========\n", clazz,methodBody);
   
       jsonCtClass.addMethod(CtNewMethod.make(methodBody.toString(), jsonCtClass));
       Class<?> jsonClass = jsonCtClass.toClass();
-      Object jsonWriter = jsonClass.getDeclaredConstructor(ZapposJson.class).newInstance(jacinda);
+      Object jsonWriter = jsonClass.getDeclaredConstructor(ZapposJson.class).newInstance(zapposJson);
       writerInvoker = new JsonWriterInvoker(clazz, jsonWriter);
       JSON_WRITER_INVOKERS.put(clazz, writerInvoker);
       
@@ -176,10 +176,10 @@ public class JsonWriterCodeGenerator {
       methodBody.append("writer.write(").append(formatterVar).append(".format((")
         .append(attrType.getName()).append(")").append(varName).append("));\n");
     
-    } else if(jacinda.getValueFormatter(attrType) != null){
+    } else if(zapposJson.getValueFormatter(attrType) != null){
       
       String formatterVar = Strings.randomAlphabetic(6)+"_fmt";
-      methodBody.append(ValueFormatter.class.getName()).append(" ").append(formatterVar).append(" = jacinda.getValueFormatter(")
+      methodBody.append(ValueFormatter.class.getName()).append(" ").append(formatterVar).append(" = zapposJson.getValueFormatter(")
         .append(attrType.getName()).append(".class);\n");
       methodBody.append("writer.write(").append(formatterVar).append(".format((")
         .append(attrType.getName()).append(")").append(varName).append("));\n");
@@ -238,7 +238,7 @@ public class JsonWriterCodeGenerator {
       methodBody.append("writer.write(CONST_DOUBLE_QUOTE);\n");
     } else {
       
-      methodBody.append("jacinda.toJson(").append(varName).append(", writer, htmlSafe);\n");
+      methodBody.append("zapposJson.toJson(").append(varName).append(", writer, htmlSafe);\n");
       
     }
   }

@@ -15,11 +15,13 @@
 
 package com.zappos.json.format;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
  * The value formatter for other types of object such as Date, Enum, etc.
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public interface ValueFormatter<T> {
@@ -31,7 +33,7 @@ public interface ValueFormatter<T> {
    * @param object
    * @return
    */
-  public String format(T object);
+  public String format(ZapposJson zapposJson, T object);
 
   /**
    * Parse string to target typpe
@@ -39,7 +41,7 @@ public interface ValueFormatter<T> {
    * @return
    * @throws Exception
    */
-  public T parse(String string) throws Exception;
+  public T parse(ZapposJson zapposJson, String string) throws Exception;
 
   public ValueFormatter<T> setPattern(String pattern);
   

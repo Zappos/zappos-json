@@ -15,20 +15,22 @@
 
 package com.zappos.json.format;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class NoOpValueFormatter extends AbstractValueFormatter<Object>{
 
   @Override
-  public String format(Object object) {
+  public String format(ZapposJson zapposJson, Object object) {
     throw new UnsupportedOperationException("NoOp");
   }
   
   @Override
-  public Object parse(String string) throws Exception {
+  public Object parse(ZapposJson zapposJson, String string) throws Exception {
     throw new UnsupportedOperationException("NoOp");
   }
 

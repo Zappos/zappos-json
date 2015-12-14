@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class TypeImpl {

@@ -19,9 +19,11 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JavaTimeInstantFormatter extends AbstractValueFormatter<Instant> {
@@ -32,15 +34,15 @@ public class JavaTimeInstantFormatter extends AbstractValueFormatter<Instant> {
   private DateTimeFormatter formatter = null;
   
   @Override
-  public String format(Instant object) {
+  public String format(ZapposJson zapposJson, Instant object) {
     if(formatter != null){
-      return toJson(formatter.format(object));
+      return toJson(zapposJson, formatter.format(object));
     }
     return String.valueOf(object.toEpochMilli());
   }
   
   @Override
-  public Instant parse(String string) throws Exception {
+  public Instant parse(ZapposJson zapposJson, String string) throws Exception {
     if(formatter != null){
       return Instant.from(formatter.parse(string));
     }

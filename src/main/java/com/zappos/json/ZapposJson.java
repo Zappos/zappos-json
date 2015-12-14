@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.zappos.json.JsonConfig.ReaderConfig;
+import com.zappos.json.JsonConfig.WriterConfig;
 import com.zappos.json.format.BigDecimalFormatter;
 import com.zappos.json.format.BigIntegerFormatter;
 import com.zappos.json.format.JavaDateFormatter;
@@ -38,22 +40,26 @@ import com.zappos.json.util.Strings;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class ZapposJson {
 
-  private final Map<Class<?>, ValueFormatter<Object>> VALUE_FORMATTERS = new ConcurrentHashMap<>();
+  protected final Map<Class<?>, ValueFormatter<Object>> VALUE_FORMATTERS = new ConcurrentHashMap<>();
 
   private final static Map<String, ZapposJson> INSTANCES = new HashMap<>();
 
   private boolean debug = false;
-
+  
   private JsonBeanIntrospector jsonBeanIntrospector;
   
   private JsonWriterCodeGenerator writerCodeGenerator;
   
   private JsonReaderCodeGenerator readerCodeGenerator;
+  
+  public final boolean[] WRITER_CONFIGS = new boolean[WriterConfig.values().length];
+  
+  public final boolean[] READER_CONFIGS = new boolean[ReaderConfig.values().length];
   
   protected ZapposJson() {
     
@@ -140,34 +146,127 @@ public class ZapposJson {
   public ValueFormatter<Object> getValueFormatter(Class<?> objectType) {
     return VALUE_FORMATTERS.get(objectType);
   }
-
+  
+  public synchronized void configure(ReaderConfig config, boolean value){
+    READER_CONFIGS[config.ordinal()] = true;
+  }
+  
+  protected synchronized boolean is(ReaderConfig config){
+    return READER_CONFIGS[config.ordinal()];
+  }
+  
+  public synchronized void configure(WriterConfig config, boolean value){
+    WRITER_CONFIGS[config.ordinal()] = true;
+  }
+  
+  protected synchronized boolean is(WriterConfig config){
+    return WRITER_CONFIGS[config.ordinal()];
+  }
+  
+  /**
+   * Try to format specified value with the formatter in a registry.
+   * This method throws {@link NullPointerException} when the specified value is null.
+   * @param value
+   * @param defaultValue
+   * @return formatted value or value.toString when there is no formatter
+   * @throws NullPointerException
+   */
+  public String format(Object value) {
+    ValueFormatter<Object> valueFormatter = VALUE_FORMATTERS.get(value.getClass());
+    if (valueFormatter != null) {
+      return valueFormatter.format(this, value);
+    } else {
+      return value.toString();
+    }
+  }
+  
   public String toJson(Object object) {
     
     StringWriter writer = new StringWriter();
-    toJson(object, writer, false);
+    toJson(object, writer, true);
     return writer.toString();
     
   }
   
   public void toJson(Object object, Writer writer) {
     
-    toJson(object, writer, false);
+    toJson(object, writer, true);
     
   }
   
-  public void toJson(Object object, Writer writer, boolean htmlSafe) {
+  protected void toJson(Object object, Writer writer, boolean basicTypeCheck) {
     
     try{
-      if (object == null) {
+      
+      if(object == null){
+        
         writer.append(JsonWriter.CONST_NULL);
+        
       }else{
+        
+        if(basicTypeCheck){
+          
+          if(object instanceof String || object instanceof Character) {
+            
+            JsonWriter.writeString(this, object.toString(), writer);
+            
+          }else if(object instanceof Number) {
+            
+            JsonWriter.writeNumber(this, (Number)object, writer);
+            
+          }else if(object instanceof Enum) {
+            
+            JsonWriter.writeEnum(this, (Enum<?>)object, writer);
+            
+          }else if(object instanceof Boolean) {
+            
+            JsonWriter.writeBoolean(this, (Boolean)object, writer);
+            
+          }else if(object instanceof Iterable) {
+            
+            JsonWriter.writeIterable(this, (Iterable<?>) object, writer);
+            
+          }else if(object instanceof Map) {
+            
+            JsonWriter.writeMap(this, (Map<?, ?>) object, writer);
+            
+          }else{
+            Class<?> objectType = object.getClass();
+            if(objectType.isArray()){
+              Class<?> componentType = objectType.getComponentType();
+              if(componentType == byte.class){
+                JsonWriter.writeString(this, (byte[])object, writer);
+              }else if(componentType == char.class){
+                JsonWriter.writeArray((char[])object, writer);
+              }else if(componentType == boolean.class){
+                JsonWriter.writeArray((boolean[])object, writer);
+              }else if(componentType == short.class){
+                JsonWriter.writeArray((short[])object, writer);
+              }else if(componentType == int.class){
+                JsonWriter.writeArray((int[])object, writer);
+              }else if(componentType == long.class){
+                JsonWriter.writeArray((long[])object, writer);
+              }else if(componentType == float.class){
+                JsonWriter.writeArray((float[])object, writer);
+              }else if(componentType == double.class){
+                JsonWriter.writeArray((double[])object, writer);
+              }else{
+                JsonWriter.writeArray(this, (Object[]) object, writer);
+              }
+            }
+          }
+          
+          return;
+        }
+        
         Class<?> objectType = object.getClass();
         JsonWriterInvoker writerInvoker = writerCodeGenerator.getWriter(objectType);
         if(writerInvoker == null){
           writerInvoker = writerCodeGenerator.registerWriter(objectType);
         }
-        writerInvoker.writeJson(object, writer, htmlSafe);
+        writerInvoker.writeJson(object, writer);
       }
+      
     }catch(Exception e){
       throw new JsonException(e);
     }

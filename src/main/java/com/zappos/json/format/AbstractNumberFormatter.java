@@ -12,29 +12,28 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.zappos.json;
 
-import com.zappos.json.ZapposJson;
-import com.zappos.json.data.SimpleBean;
+package com.zappos.json.format;
+
+import java.util.regex.Pattern;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
+ * @param <T>
  */
-public abstract class AbstractBaseTest {
+public abstract class AbstractNumberFormatter<T extends Number> extends AbstractValueFormatter<T>{
 
-  protected static final ZapposJson zapposJson = new ZapposJson(true);
-
-  protected static SimpleBean createSimpleBean() {
-    SimpleBean simple = new SimpleBean();
-    simple.setString("simple");
-    simple.setB(true);
-    simple.setB2(false);
-    simple.setI(new Integer(1));
-    simple.setI2(2);
-    simple.setD(new Double(1.0));
-    simple.setD2(2.0);
-    return simple;
+  private final static Pattern JS_NUMBER_PATTERN = Pattern.compile("^[-+]?[0#]*\\.?[0#]+([eE][-+]?[0#]+)?$");
+  
+  @Override
+  public ValueFormatter<T> setPattern(String pattern) {
+    setPattern(pattern);
+    if(JS_NUMBER_PATTERN.matcher(pattern).matches()){
+      setJsString(false);
+    }
+    return this;
   }
+  
 }

@@ -23,6 +23,11 @@ import java.lang.annotation.Target;
 import com.zappos.json.format.NoOpValueFormatter;
 import com.zappos.json.format.ValueFormatter;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 @Target({ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonFormat {

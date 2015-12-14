@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonReaderInvoker {
@@ -38,10 +38,8 @@ public class JsonReaderInvoker {
   public JsonReaderInvoker(ZapposJson jacinda, Class<?> readerClass)
       throws Exception {
     this.jacinda = jacinda;
-    this.constructorWithString = readerClass.getConstructor(ZapposJson.class,
-        String.class);
-    this.constructorWithReader = readerClass.getConstructor(ZapposJson.class,
-        Reader.class);
+    this.constructorWithString = readerClass.getConstructor(ZapposJson.class, String.class);
+    this.constructorWithReader = readerClass.getConstructor(ZapposJson.class, Reader.class);
     parseMethod = readerClass.getDeclaredMethod("parse");
   }
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public final class Reflections {

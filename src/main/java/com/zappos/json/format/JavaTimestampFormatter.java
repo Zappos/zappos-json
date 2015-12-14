@@ -18,23 +18,25 @@ package com.zappos.json.format;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JavaTimestampFormatter extends AbstractValueFormatter<Timestamp> {
 
   @Override
-  public String format(Timestamp object) {
+  public String format(ZapposJson zapposJson, Timestamp object) {
     if(getPattern() != null){
-      return toJson(new SimpleDateFormat(getPattern()).format(object));
+      return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
     }
     return String.valueOf(object.getTime());
   }
 
   @Override
-  public Timestamp parse(String string) throws Exception {
+  public Timestamp parse(ZapposJson zapposJson, String string) throws Exception {
     if(getPattern() != null){
       return new Timestamp(new SimpleDateFormat(getPattern()).parse(string).getTime());
     }

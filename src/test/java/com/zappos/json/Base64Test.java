@@ -22,6 +22,11 @@ import org.junit.Test;
 
 import com.zappos.json.data.ByteArrayBean;
 
+/**
+ * 
+ * @author hussachai
+ *
+ */
 public class Base64Test extends AbstractBaseTest {
   
   @Test
@@ -30,12 +35,12 @@ public class Base64Test extends AbstractBaseTest {
     byte data[] = "it's supposed to be binary data".getBytes();
     String base64 = Base64.getEncoder().encodeToString(data);
     bean.setData(data);
-    String json = jacinda.toJson(bean);
+    String json = zapposJson.toJson(bean);
     System.out.println(json);
     
     Assert.assertTrue(json.contains(base64));
     
-    ByteArrayBean bean2 = jacinda.fromJson(json, ByteArrayBean.class);
+    ByteArrayBean bean2 = zapposJson.fromJson(json, ByteArrayBean.class);
     Assert.assertArrayEquals(bean.getData(), bean2.getData());
   }
   

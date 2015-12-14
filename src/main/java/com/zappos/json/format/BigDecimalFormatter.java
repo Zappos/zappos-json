@@ -18,24 +18,25 @@ package com.zappos.json.format;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
-public class BigDecimalFormatter extends AbstractValueFormatter<BigDecimal> {
+public class BigDecimalFormatter extends AbstractNumberFormatter<BigDecimal> {
   
   @Override
-  public String format(BigDecimal object) {
+  public String format(ZapposJson zapposJson, BigDecimal object) {
     if(getPattern() != null){
-      /* It's possible to have result containing , (comma)*/
-      return toJson(new DecimalFormat(getPattern()).format(object));
+      return toJson(zapposJson, new DecimalFormat(getPattern()).format(object));
     }
     return object.toString();
   }
   
   @Override
-  public BigDecimal parse(String string) throws Exception {
+  public BigDecimal parse(ZapposJson zapposJson, String string) throws Exception {
     if(getPattern() != null){
       DecimalFormat df = new DecimalFormat(getPattern());
       df.setParseBigDecimal(true);

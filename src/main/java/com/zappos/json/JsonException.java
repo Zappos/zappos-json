@@ -17,7 +17,7 @@ package com.zappos.json;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonException extends RuntimeException {

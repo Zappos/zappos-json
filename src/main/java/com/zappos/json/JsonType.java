@@ -17,7 +17,7 @@ package com.zappos.json;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public enum JsonType {

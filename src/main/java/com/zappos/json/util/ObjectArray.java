@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * Trimmed version of ArrayList
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class ObjectArray {

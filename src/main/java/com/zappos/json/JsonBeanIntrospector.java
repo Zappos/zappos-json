@@ -34,7 +34,7 @@ import com.zappos.json.util.Reflections;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonBeanIntrospector {

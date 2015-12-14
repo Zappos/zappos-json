@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 @Target({ElementType.METHOD, ElementType.FIELD })

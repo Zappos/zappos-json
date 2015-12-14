@@ -19,9 +19,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JavaTimeLocalDateFormatter extends AbstractValueFormatter<LocalDate> {
@@ -29,12 +31,12 @@ public class JavaTimeLocalDateFormatter extends AbstractValueFormatter<LocalDate
   private DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
   
   @Override
-  public String format(LocalDate object) {
-    return toJsonString(formatter.format(object));
+  public String format(ZapposJson zapposJson, LocalDate object) {
+    return toJson(zapposJson, formatter.format(object));
   }
   
   @Override
-  public LocalDate parse(String string) throws Exception {
+  public LocalDate parse(ZapposJson zapposJson, String string) throws Exception {
     return LocalDate.from(formatter.parse(string));
   }
   

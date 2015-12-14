@@ -19,18 +19,19 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import com.zappos.json.JsonWriter;
-import com.zappos.json.util.Strings;
+import com.zappos.json.ZapposJson;
+
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
 
   private String pattern;
   
-  private boolean htmlSafe;
+  private boolean jsString = true;
   
   @Override
   public ValueFormatter<T> setPattern(String pattern) {
@@ -41,25 +42,30 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
   public String getPattern(){
     return pattern;
   }
+
+  public String toJson(ZapposJson zapposJson, String value){
+    if(jsString){
+      StringWriter writer = new StringWriter();
+      try{
+        JsonWriter.writeString(zapposJson, value, writer);
+      }catch(IOException e){}
+      return writer.toString();
+    }else{
+      return value;
+    }
+  }
   
-  public boolean isHtmlSafe() {
-    return htmlSafe;
+  public void setJsString(boolean jsString) {
+    this.jsString = jsString;
   }
 
-  public void setHtmlSafe(boolean htmlSafe) {
-    this.htmlSafe = htmlSafe;
-  }
 
-  public String toJson(String value){
-    return Strings.isNumber(value)? value: toJsonString(value);
-  }
-  
-  public String toJsonString(String value){
-    StringWriter writer = new StringWriter();
-    try {
-      JsonWriter.writeString(value, writer, htmlSafe);
-    } catch (IOException e) {}
-    return writer.toString();
+  /**
+   * 
+   * @return
+   */
+  public boolean isJsString(){
+    return jsString;
   }
   
 }

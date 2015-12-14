@@ -18,20 +18,25 @@ package com.zappos.json.format;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
+import com.zappos.json.ZapposJson;
+
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JavaSqlDateFormatter extends AbstractValueFormatter<Date> {
 
   @Override
-  public String format(Date object) {
-    return toJsonString(newFormatter().format(object));
+  public String format(ZapposJson zapposJson, Date object) {
+    if(getPattern() != null){
+      return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
+    }
+    return toJson(zapposJson, newFormatter().format(object));
   }
   
   @Override
-  public Date parse(String string) throws Exception {
+  public Date parse(ZapposJson zapposJson, String string) throws Exception {
     return new Date(newFormatter().parse(string).getTime());
   }
   

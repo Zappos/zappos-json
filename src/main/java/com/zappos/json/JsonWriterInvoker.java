@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonWriterInvoker {
@@ -39,9 +39,9 @@ public class JsonWriterInvoker {
     this.jsonWriter = jsonWriter;
   }
   
-  public void writeJson(Object data, Writer writer, boolean htmlSafe) {
+  public void writeJson(Object data, Writer writer) {
     try {
-      writerMethod.invoke(jsonWriter, data, writer, htmlSafe);
+      writerMethod.invoke(jsonWriter, data, writer);
     } catch (IllegalAccessException | IllegalArgumentException
         | InvocationTargetException e) {
       throw new RuntimeException(e);

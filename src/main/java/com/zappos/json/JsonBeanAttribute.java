@@ -23,7 +23,7 @@ import com.zappos.json.format.ValueFormatter;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonBeanAttribute {

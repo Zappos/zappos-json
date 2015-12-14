@@ -14,27 +14,25 @@
  */
 package com.zappos.json;
 
-import com.zappos.json.ZapposJson;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import com.zappos.json.data.SimpleBean;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
-public abstract class AbstractBaseTest {
-
-  protected static final ZapposJson zapposJson = new ZapposJson(true);
-
-  protected static SimpleBean createSimpleBean() {
-    SimpleBean simple = new SimpleBean();
-    simple.setString("simple");
-    simple.setB(true);
-    simple.setB2(false);
-    simple.setI(new Integer(1));
-    simple.setI2(2);
-    simple.setD(new Double(1.0));
-    simple.setD2(2.0);
-    return simple;
+public class ExceptionTest extends AbstractBaseTest {
+  
+  @Test
+  public void readBasicType(){
+    List<SimpleBean> l = new ArrayList<>();
+    l.add(createSimpleBean());
+    l.add(createSimpleBean());
+    System.out.println(zapposJson.toJson(l));
   }
 }
