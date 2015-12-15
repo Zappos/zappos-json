@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  */
 public class JsonReaderInvoker {
 
-  private ZapposJson jacinda;
+  private ZapposJson zapposJson;
 
   private Constructor<?> constructorWithString;
 
@@ -37,7 +37,7 @@ public class JsonReaderInvoker {
 
   public JsonReaderInvoker(ZapposJson jacinda, Class<?> readerClass)
       throws Exception {
-    this.jacinda = jacinda;
+    this.zapposJson = jacinda;
     this.constructorWithString = readerClass.getConstructor(ZapposJson.class, String.class);
     this.constructorWithReader = readerClass.getConstructor(ZapposJson.class, Reader.class);
     parseMethod = readerClass.getDeclaredMethod("parse");
@@ -46,7 +46,7 @@ public class JsonReaderInvoker {
   @SuppressWarnings("unchecked")
   public <T> T readJson(Reader reader, Class<T> clazz) {
     try {
-      Object jsonReader = constructorWithReader.newInstance(jacinda, reader);
+      Object jsonReader = constructorWithReader.newInstance(zapposJson, reader);
       return (T) parseMethod.invoke(jsonReader);
     } catch (InvocationTargetException e) {
       throw new RuntimeException(e.getCause());
@@ -59,7 +59,7 @@ public class JsonReaderInvoker {
   @SuppressWarnings("unchecked")
   public <T> T readJson(String json, Class<T> clazz) {
     try {
-      Object jsonReader = constructorWithString.newInstance(jacinda, json);
+      Object jsonReader = constructorWithString.newInstance(zapposJson, json);
       return (T) parseMethod.invoke(jsonReader);
     } catch (InstantiationException | IllegalAccessException
         | IllegalArgumentException | InvocationTargetException e) {

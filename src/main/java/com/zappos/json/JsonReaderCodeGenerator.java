@@ -43,12 +43,12 @@ public class JsonReaderCodeGenerator {
 
   private final Map<Class<?>, JsonReaderInvoker> JSON_READER_INVOKERS = new ConcurrentHashMap<>();
   
-  private ZapposJson jacinda;
+  private ZapposJson zapposJson;
   
   private JsonBeanIntrospector beanIntrospector;
   
-  public JsonReaderCodeGenerator(ZapposJson jacinda, JsonBeanIntrospector beanIntrospector){
-    this.jacinda = jacinda;
+  public JsonReaderCodeGenerator(ZapposJson zapposJson, JsonBeanIntrospector beanIntrospector){
+    this.zapposJson = zapposJson;
     this.beanIntrospector = beanIntrospector;
   }
   
@@ -112,7 +112,7 @@ public class JsonReaderCodeGenerator {
   
       }
       methodBody.append("return $2;\n}");
-      jacinda.debug("\nReader code for \"@\"\n=========\n@\n=========\n", clazz, methodBody);
+      zapposJson.debug("\nReader code for \"@\"\n=========\n@\n=========\n", clazz, methodBody);
       ClassPool classPool = ClassPool.getDefault();
       classPool.importPackage("java.util");
       classPool.importPackage("java.math");
@@ -124,7 +124,7 @@ public class JsonReaderCodeGenerator {
           new CtClass[] { classPool.get(int.class.getName()),
               classPool.get(Map.class.getName()) });
       ctMethod.setBody(methodBody.toString());
-      readerInvoker = new JsonReaderInvoker(jacinda, jsonCtClass.toClass());
+      readerInvoker = new JsonReaderInvoker(zapposJson, jsonCtClass.toClass());
       JSON_READER_INVOKERS.put(clazz, readerInvoker);
       
       return readerInvoker;
@@ -141,7 +141,7 @@ public class JsonReaderCodeGenerator {
 
     for (Map.Entry<String, TypeInfo> entry : typeInfos.entrySet()) {
 
-      jacinda.debug("Path: @, Mapping: @", entry.getKey(), entry.getValue());
+      zapposJson.debug("Path: @, Mapping: @", entry.getKey(), entry.getValue());
 
       String path = entry.getKey();
       TypeInfo typeInfo = entry.getValue();
@@ -207,9 +207,9 @@ public class JsonReaderCodeGenerator {
           if(jsonType == JsonType.OBJECT){
             //TODO: change this it's bad
             /* This do the trick but it is going to be slow to convert json -> map -> json */
-            code += "Object _m2 = jacinda.fromJson(jacinda.toJson((Map)_m1), "+componentType.getName()+".class);\n";
+            code += "Object _m2 = zapposJson.fromJson(zapposJson.toJson((Map)_m1), "+componentType.getName()+".class);\n";
             code += "System.out.println(\"=======>1:\"+_m1);\n";
-            code += "System.out.println(\"=======>2:\"+jacinda.toJson((Map)_m1));\n";
+            code += "System.out.println(\"=======>2:\"+zapposJson.toJson((Map)_m1));\n";
           }else if(jsonType == JsonType.ARRAY){
             if(componentType.isArray()){
               componentType = componentType.getComponentType();
@@ -304,7 +304,7 @@ public class JsonReaderCodeGenerator {
       }
       
       if ((jsonType == JsonType.OBJECT && !Map.class.isAssignableFrom(attrType)
-          && jacinda.getValueFormatter(attrType) == null) || arrayOfObject
+          && zapposJson.getValueFormatter(attrType) == null) || arrayOfObject
           || collectionOfObject) {
         paths[level] = jsonKey;
         String path = getObjectAccessPath(paths, level);
@@ -456,7 +456,7 @@ public class JsonReaderCodeGenerator {
       } else {
         // TODO: make it better
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName()
-            + ")jacinda.getValueFormatter(" + attrType.getName()
+            + ")zapposJson.getValueFormatter(" + attrType.getName()
             + ".class).parse((String)@);\n";
       }
 
@@ -479,9 +479,9 @@ public class JsonReaderCodeGenerator {
       }
     } else {
       // object?
-      if (jacinda.getValueFormatter(attrType) != null) {
+      if (zapposJson.getValueFormatter(attrType) != null) {
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName()
-            + ")jacinda.getValueFormatter(" + attrType.getName()
+            + ")zapposJson.getValueFormatter(" + attrType.getName()
             + ".class).parse(String.valueOf(@));\n";
       } else {
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName() + ")@;\n";
