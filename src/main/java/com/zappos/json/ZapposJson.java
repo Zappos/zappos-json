@@ -183,18 +183,12 @@ public class ZapposJson {
   public String toJson(Object object) {
     
     StringWriter writer = new StringWriter();
-    toJson(object, writer, true);
+    toJson(object, writer);
     return writer.toString();
     
   }
   
   public void toJson(Object object, Writer writer) {
-    
-    toJson(object, writer, true);
-    
-  }
-  
-  protected void toJson(Object object, Writer writer, boolean basicTypeCheck) {
     
     try{
       

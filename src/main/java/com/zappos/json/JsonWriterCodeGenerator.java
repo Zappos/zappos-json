@@ -234,7 +234,7 @@ public class JsonWriterCodeGenerator {
       methodBody.append("writer.write(CONST_DOUBLE_QUOTE);\n");
     } else {
       
-      methodBody.append("zapposJson.toJson(").append(varName).append(", writer, false);\n");
+      methodBody.append("zapposJson.toJson(").append(varName).append(", writer);\n");
       
     }
   }
