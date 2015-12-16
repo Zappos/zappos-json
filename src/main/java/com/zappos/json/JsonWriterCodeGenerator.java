@@ -74,14 +74,13 @@ public class JsonWriterCodeGenerator {
       classPool.importPackage("java.util");
       classPool.importPackage("java.math");
       CtClass jsonCtClass = classPool.get(JsonWriter.class.getName());
-      
       String randomName = Strings.randomAlphabetic(16);
-      jsonCtClass.setName(randomName + "_JSON_Writer");
+      jsonCtClass.setName("com.zappos.json."+randomName + "_JSON_Writer");
   
       Map<String, String> fieldVars = new HashMap<>();
       StringBuilder methodBody = new StringBuilder();
       methodBody.append("public void writeJson (").append(clazz.getName())
-          .append(" __o, java.io.Writer writer, boolean htmlSafe) throws Exception {\n")
+          .append(" __o, java.io.Writer writer) throws Exception {\n")
           .append("if(__o == null) return;\n");
       
       generateJsonWriterBody(clazz, methodBody, fieldVars);
@@ -93,8 +92,7 @@ public class JsonWriterCodeGenerator {
                 + " = " + fieldEntry.getValue() + ";", jsonCtClass));
       }
   
-      zapposJson.debug("\nWriter code for \"@\"\n=========\n@\n=========\n", clazz,methodBody);
-  
+      zapposJson.debug("\nWriter code for \"@\"\n=========\n@\n=========\n", clazz, methodBody);
       jsonCtClass.addMethod(CtNewMethod.make(methodBody.toString(), jsonCtClass));
       Class<?> jsonClass = jsonCtClass.toClass();
       Object jsonWriter = jsonClass.getDeclaredConstructor(ZapposJson.class).newInstance(zapposJson);
@@ -173,7 +171,7 @@ public class JsonWriterCodeGenerator {
           .append(beanAttr.getFormatterPattern()).append("\");\n");
       }
       
-      methodBody.append("writer.write(").append(formatterVar).append(".format((")
+      methodBody.append("writer.write(").append(formatterVar).append(".format(zapposJson, (")
         .append(attrType.getName()).append(")").append(varName).append("));\n");
     
     } else if(zapposJson.getValueFormatter(attrType) != null){
@@ -181,16 +179,16 @@ public class JsonWriterCodeGenerator {
       String formatterVar = Strings.randomAlphabetic(6)+"_fmt";
       methodBody.append(ValueFormatter.class.getName()).append(" ").append(formatterVar).append(" = zapposJson.getValueFormatter(")
         .append(attrType.getName()).append(".class);\n");
-      methodBody.append("writer.write(").append(formatterVar).append(".format((")
+      methodBody.append("writer.write(").append(formatterVar).append(".format(zapposJson, (")
         .append(attrType.getName()).append(")").append(varName).append("));\n");
       
     } else if (attrType == String.class) {
       
-      methodBody.append("writeString(").append(varName).append(", writer, htmlSafe);\n");
+      methodBody.append("writeString(zapposJson, ").append(varName).append(", writer);\n");
     
     } else if (attrType == Character.class || attrType == char.class){
       
-      methodBody.append("writeString(new String(").append(varName).append("), writer, htmlSafe);\n");
+      methodBody.append("writeString(zapposJson, new String(").append(varName).append("), writer);\n");
       
     } else if (attrType.isPrimitive() || Number.class.isAssignableFrom(attrType) || attrType == Boolean.class){
       
@@ -199,11 +197,9 @@ public class JsonWriterCodeGenerator {
     } else if (attrType.isArray()) {
       
       if(attrType.getComponentType() == char.class){
-        //TODO: what about Character?
-        methodBody.append("writeString(new String(").append(varName).append("), writer, htmlSafe);\n");
+        methodBody.append("writeString(zapposJson, new String(").append(varName).append("), writer);\n");
       }else if(attrType.getComponentType() == byte.class){
-        //TODO: what about Byte?
-        methodBody.append("writeString(").append(varName).append(", writer);\n");
+        methodBody.append("writeBase64String(zapposJson, ").append(varName).append(", writer);\n");
       }else{
         generateArrayCode(beanAttr, methodBody, attrType.getComponentType(), varName);
       }
@@ -238,7 +234,7 @@ public class JsonWriterCodeGenerator {
       methodBody.append("writer.write(CONST_DOUBLE_QUOTE);\n");
     } else {
       
-      methodBody.append("zapposJson.toJson(").append(varName).append(", writer, htmlSafe);\n");
+      methodBody.append("zapposJson.toJson(").append(varName).append(", writer, false);\n");
       
     }
   }
@@ -311,7 +307,7 @@ public class JsonWriterCodeGenerator {
       methodBody.append(valueType.getName()).append(" __mapValue = (")
         .append(valueType.getName()).append(")__entry.getValue();\n");
     }
-    methodBody.append("writeString(__mapKey, writer, htmlSafe);\n");
+    methodBody.append("writeString(zapposJson, __mapKey, writer);\n");
     methodBody.append("writer.write(CONST_COLON);\n");
     generateWriterCode(beanAttr, methodBody, valueType, "__mapValue");
     methodBody.append("if(__hasLast = ").append(iterVarName).append(".hasNext()){\n");
@@ -328,7 +324,7 @@ public class JsonWriterCodeGenerator {
       methodBody.append(valueType.getName()).append(" __mapValue = (")
         .append(valueType.getName()).append(")__entry.getValue();\n");
     }
-    methodBody.append("writeString(__mapKey, writer, htmlSafe);\n");
+    methodBody.append("writeString(zapposJson, __mapKey, writer);\n");
     methodBody.append("writer.write(CONST_COLON);\n");
     generateWriterCode(beanAttr, methodBody, valueType, "__mapValue");
     methodBody.append("}\n");

@@ -76,10 +76,10 @@ public class JsonWriter {
     HTML_SAFE_REPLACEMENT_CHARS['\''] = "\\u0027";
   }
   
-  protected ZapposJson jacinda;
+  protected ZapposJson zapposJson;
 
   public JsonWriter(ZapposJson jacinda) {
-    this.jacinda = jacinda;
+    this.zapposJson = jacinda;
   }
   
   public static void writeString(ZapposJson zapposJson, String value, Writer writer) throws IOException {
@@ -131,11 +131,11 @@ public class JsonWriter {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
     Iterator<?> iterator = iterable.iterator();
     if(iterator.hasNext()){
-      zapposJson.toJson(iterator.next(), writer);
+      zapposJson.toJson(iterator.next(), writer, false);
     }
     while(iterator.hasNext()){
       writer.append(JsonWriter.CONST_COMMA);
-      zapposJson.toJson(iterator.next(), writer);
+      zapposJson.toJson(iterator.next(), writer, false);
     }
     writer.append(JsonWriter.CONST_CLOSE_ARRAY);
   }
@@ -149,11 +149,11 @@ public class JsonWriter {
       }else{
         second = true;
       }
-      writer.append(JsonWriter.CONST_DOUBLE_QUOTE)
-          .append((String) entry.getKey())
-          .append(JsonWriter.CONST_DOUBLE_QUOTE)
-          .append(JsonWriter.CONST_COLON);
-      zapposJson.toJson(entry.getValue(), writer);
+      writer.append(JsonWriter.CONST_DOUBLE_QUOTE);
+      JsonWriter.writeString(zapposJson, (String)entry.getKey(), writer);
+      writer.append(JsonWriter.CONST_DOUBLE_QUOTE);
+      writer.append(JsonWriter.CONST_COLON);
+      zapposJson.toJson(entry.getValue(), writer, false);
     }
     writer.append(JsonWriter.CONST_CLOSE_OBJECT);
   }
@@ -162,16 +162,16 @@ public class JsonWriter {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
     int j = values.length - 1;
     for (int i = 0; i < j; i++) {
-      zapposJson.toJson(values[i], writer);
+      zapposJson.toJson(values[i], writer, false);
       writer.append(JsonWriter.CONST_COMMA);
     }
     if (j > -1) {
-      zapposJson.toJson(values[j], writer);
+      zapposJson.toJson(values[j], writer, false);
     }
     writer.append(JsonWriter.CONST_CLOSE_ARRAY);
   }
   
-  public static void writeString(ZapposJson zapposJson, byte value[], Writer writer) throws IOException {
+  public static void writeBase64String(ZapposJson zapposJson, byte value[], Writer writer) throws IOException {
     writer.write(JsonWriter.CONST_DOUBLE_QUOTE);
     writer.write(DatatypeConverter.printBase64Binary(value));
     writer.write(JsonWriter.CONST_DOUBLE_QUOTE);

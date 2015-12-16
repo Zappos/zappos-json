@@ -235,7 +235,7 @@ public class ZapposJson {
             if(objectType.isArray()){
               Class<?> componentType = objectType.getComponentType();
               if(componentType == byte.class){
-                JsonWriter.writeString(this, (byte[])object, writer);
+                JsonWriter.writeBase64String(this, (byte[])object, writer);
               }else if(componentType == char.class){
                 JsonWriter.writeArray((char[])object, writer);
               }else if(componentType == boolean.class){
@@ -256,7 +256,6 @@ public class ZapposJson {
             }
           }
           
-          return;
         }
         
         Class<?> objectType = object.getClass();

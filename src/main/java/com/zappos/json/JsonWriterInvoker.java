@@ -32,7 +32,7 @@ public class JsonWriterInvoker {
   public JsonWriterInvoker(Class<?> dataClass, Object jsonWriter) {
     try {
       this.writerMethod = jsonWriter.getClass().getDeclaredMethod("writeJson",
-          dataClass, Writer.class, boolean.class);
+          dataClass, Writer.class);
     } catch (NoSuchMethodException | SecurityException e) {
       throw new RuntimeException(e);
     }

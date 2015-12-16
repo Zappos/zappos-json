@@ -234,7 +234,7 @@ public class JsonReaderCodeGenerator {
             }
             
             code += attrType.getName() + " " + valueName + " = (" + attrType.getName()
-              + ")" + formatterVar + ".parse(String.valueOf(" + tmpValueName + "));\n";
+              + ")" + formatterVar + ".parse(zapposJson, String.valueOf(" + tmpValueName + "));\n";
             
         } else {
           
@@ -457,7 +457,7 @@ public class JsonReaderCodeGenerator {
         // TODO: make it better
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName()
             + ")zapposJson.getValueFormatter(" + attrType.getName()
-            + ".class).parse((String)@);\n";
+            + ".class).parse(zapposJson, (String)@);\n";
       }
 
     } else if (attrType == Boolean.class) {
@@ -482,7 +482,7 @@ public class JsonReaderCodeGenerator {
       if (zapposJson.getValueFormatter(attrType) != null) {
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName()
             + ")zapposJson.getValueFormatter(" + attrType.getName()
-            + ".class).parse(String.valueOf(@));\n";
+            + ".class).parse(zapposJson, String.valueOf(@));\n";
       } else {
         valueDeclaration = attrType.getName() + " @ = (" + attrType.getName() + ")@;\n";
       }

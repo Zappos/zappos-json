@@ -77,7 +77,7 @@ public class JsonReader {
   private String paths[] = new String[MAX_OBJECT_TREE_DEEP];
 
   @SuppressWarnings("unused")
-  private ZapposJson jacinda; /* will be used by generated code */
+  private ZapposJson zapposJson; /* will be used by generated code */
 
   /*
    * | bufferOffset v [a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t] < input
@@ -94,7 +94,7 @@ public class JsonReader {
   }
 
   public JsonReader(ZapposJson jacinda, Reader reader, int buffersize) {
-    this.jacinda = jacinda;
+    this.zapposJson = jacinda;
     this.reader = reader;
     buffer = new char[buffersize];
     line = 1;
