@@ -20,6 +20,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class ContainingCollection {
 
   private Collection<Integer> integers;

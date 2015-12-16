@@ -19,7 +19,7 @@ import com.zappos.json.annot.JsonKey;
 
 /**
  * 
- * @author Hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class JsonKeyBean {

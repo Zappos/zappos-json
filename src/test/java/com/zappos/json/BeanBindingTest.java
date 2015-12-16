@@ -34,7 +34,7 @@ import com.zappos.json.data.SimpleBean;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class BeanBindingTest extends AbstractBaseTest {

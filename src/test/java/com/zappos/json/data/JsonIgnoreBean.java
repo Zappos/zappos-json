@@ -17,6 +17,11 @@ package com.zappos.json.data;
 
 import com.zappos.json.annot.JsonIgnore;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class JsonIgnoreBean {
 
   private String countMeIn = "Count Me In";

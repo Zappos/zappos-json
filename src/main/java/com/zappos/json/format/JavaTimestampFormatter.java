@@ -28,6 +28,11 @@ import com.zappos.json.ZapposJson;
 public class JavaTimestampFormatter extends AbstractValueFormatter<Timestamp> {
 
   @Override
+  public Timestamp cast(Object obj) {
+    return Timestamp.class.cast(obj);
+  }
+  
+  @Override
   public String format(ZapposJson zapposJson, Timestamp object) {
     if(getPattern() != null){
       return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));

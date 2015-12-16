@@ -33,6 +33,8 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
   
   private boolean jsString = true;
   
+  public abstract T cast(Object obj);
+  
   @Override
   public ValueFormatter<T> setPattern(String pattern) {
     this.pattern = pattern;
@@ -58,8 +60,7 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
   public void setJsString(boolean jsString) {
     this.jsString = jsString;
   }
-
-
+  
   /**
    * 
    * @return

@@ -20,12 +20,23 @@ import javax.xml.bind.DatatypeConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.zappos.json.data.SimpleBean;
+
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class BasicTypeTest extends AbstractBaseTest {
+  
+  @Test
+  public void testString() {
+    String json = zapposJson.toJson("hello");
+    Assert.assertEquals("\"hello\"", json);
+    
+    json = zapposJson.toJson("escape \" should work");
+    Assert.assertEquals("\"escape \\\" should work\"", json);
+  }
   
   @Test
   public void testNativeWrapper() {
@@ -121,12 +132,11 @@ public class BasicTypeTest extends AbstractBaseTest {
   }
   
   @Test
-  public void testString() {
-    String json = zapposJson.toJson("hello");
-    Assert.assertEquals("\"hello\"", json);
+  public void testArrayOfObject() {
+    String json = zapposJson.toJson(new SimpleBean[]{createSimpleBean(), createSimpleBean()});
+    String simpleBeanJson = zapposJson.toJson(createSimpleBean());
+    Assert.assertEquals("["+simpleBeanJson+","+simpleBeanJson+"]", json);
     
-    json = zapposJson.toJson("escape \" should work");
-    Assert.assertEquals("\"escape \\\" should work\"", json);
   }
   
   

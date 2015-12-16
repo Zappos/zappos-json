@@ -28,6 +28,11 @@ import com.zappos.json.ZapposJson;
 public class JavaDateFormatter extends AbstractValueFormatter<Date> {
   
   @Override
+  public Date cast(Object obj) {
+    return Date.class.cast(obj);
+  }
+  
+  @Override
   public String format(ZapposJson zapposJson, Date object) {
     if(getPattern() != null){
       return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));

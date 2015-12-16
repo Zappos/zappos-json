@@ -28,6 +28,11 @@ import com.zappos.json.ZapposJson;
 public class BigDecimalFormatter extends AbstractNumberFormatter<BigDecimal> {
   
   @Override
+  public BigDecimal cast(Object obj) {
+    return BigDecimal.class.cast(obj);
+  }
+  
+  @Override
   public String format(ZapposJson zapposJson, BigDecimal object) {
     if(getPattern() != null){
       return toJson(zapposJson, new DecimalFormat(getPattern()).format(object));
@@ -49,5 +54,7 @@ public class BigDecimalFormatter extends AbstractNumberFormatter<BigDecimal> {
   public ValueFormatter<BigDecimal> newInstance() {
     return new BigDecimalFormatter();
   }
+
+  
   
 }

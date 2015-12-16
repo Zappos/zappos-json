@@ -19,7 +19,7 @@ import com.zappos.json.data.SimpleBean;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public abstract class AbstractBaseTest {

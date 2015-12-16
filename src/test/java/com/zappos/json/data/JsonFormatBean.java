@@ -24,6 +24,11 @@ import com.zappos.json.annot.JsonFormat;
 import com.zappos.json.format.AbstractValueFormatter;
 import com.zappos.json.format.ValueFormatter;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class JsonFormatBean {
   
   public static class CustomDateFormatter extends AbstractValueFormatter<Date>{
@@ -36,6 +41,12 @@ public class JsonFormatBean {
         throw new RuntimeException(e);
       }
     }
+    
+    @Override
+    public Date cast(Object obj) {
+      return Date.class.cast(obj);
+    }
+    
     @Override
     public String format(ZapposJson zapposJson, Date object) {
       if(getPattern() != null){
@@ -43,6 +54,7 @@ public class JsonFormatBean {
       }
       return toJson(zapposJson, FIXED_DATE_STRING);
     }
+    
     @Override
     public Date parse(ZapposJson zapposJson, String string) throws Exception {
       if(getPattern() != null){
@@ -50,10 +62,12 @@ public class JsonFormatBean {
       }
       return FIXED_DATE;
     }
+    
     @Override
     public ValueFormatter<Date> newInstance() {
       return new CustomDateFormatter();
     }
+    
   }
   
   @JsonFormat("yyyy-MM-dd")

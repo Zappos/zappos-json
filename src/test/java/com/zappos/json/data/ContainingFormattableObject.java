@@ -21,7 +21,7 @@ import java.util.Date;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class ContainingFormattableObject {

@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class NestedBean {

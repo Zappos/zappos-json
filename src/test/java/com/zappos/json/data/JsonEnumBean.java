@@ -18,6 +18,11 @@ package com.zappos.json.data;
 import com.zappos.json.annot.JsonEnum;
 import com.zappos.json.annot.JsonEnum.EnumValue;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class JsonEnumBean {
   
   public static enum MyEnum {

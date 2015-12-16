@@ -31,6 +31,11 @@ public class JavaTimeLocalDateFormatter extends AbstractValueFormatter<LocalDate
   private DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
   
   @Override
+  public LocalDate cast(Object obj) {
+    return LocalDate.class.cast(obj);
+  }
+  
+  @Override
   public String format(ZapposJson zapposJson, LocalDate object) {
     return toJson(zapposJson, formatter.format(object));
   }

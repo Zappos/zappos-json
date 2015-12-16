@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class ContainingMap {

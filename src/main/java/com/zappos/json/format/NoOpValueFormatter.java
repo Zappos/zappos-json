@@ -25,6 +25,11 @@ import com.zappos.json.ZapposJson;
 public class NoOpValueFormatter extends AbstractValueFormatter<Object>{
 
   @Override
+  public Object cast(Object obj) {
+    return obj;
+  }
+  
+  @Override
   public String format(ZapposJson zapposJson, Object object) {
     throw new UnsupportedOperationException("NoOp");
   }

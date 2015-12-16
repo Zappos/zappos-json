@@ -15,6 +15,11 @@
 
 package com.zappos.json.data;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class ContainingArray {
 
   private String strings[] = new String[]{"A", "B", "C"};

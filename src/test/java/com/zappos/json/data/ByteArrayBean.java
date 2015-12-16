@@ -15,6 +15,11 @@
 
 package com.zappos.json.data;
 
+/**
+ * 
+ * @author Hussachai Puripunpinyo
+ *
+ */
 public class ByteArrayBean {
 
   byte data[] = "it's supposed to be binary data".getBytes();

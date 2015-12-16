@@ -24,7 +24,7 @@ import com.zappos.json.data.ByteArrayBean;
 
 /**
  * 
- * @author hussachai
+ * @author Hussachai Puripunpinyo
  *
  */
 public class Base64Test extends AbstractBaseTest {

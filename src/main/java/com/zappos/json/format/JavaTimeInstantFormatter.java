@@ -28,10 +28,16 @@ import com.zappos.json.ZapposJson;
  */
 public class JavaTimeInstantFormatter extends AbstractValueFormatter<Instant> {
   
+  
   /**
    * This class is thread-safe
    */
   private DateTimeFormatter formatter = null;
+  
+  @Override
+  public Instant cast(Object obj) {
+    return Instant.class.cast(obj);
+  }
   
   @Override
   public String format(ZapposJson zapposJson, Instant object) {
