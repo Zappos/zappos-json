@@ -149,9 +149,7 @@ public class JsonWriter {
       }else{
         second = true;
       }
-      writer.append(JsonWriter.CONST_DOUBLE_QUOTE);
       JsonWriter.writeString(zapposJson, (String)entry.getKey(), writer);
-      writer.append(JsonWriter.CONST_DOUBLE_QUOTE);
       writer.append(JsonWriter.CONST_COLON);
       zapposJson.toJson(entry.getValue(), writer, false);
     }

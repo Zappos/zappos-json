@@ -205,11 +205,12 @@ public class JsonReaderCodeGenerator {
           code += "String _key = (String)" + tmpValueName + "_iter.next();\n";
           code += "Object _m1 = " + tmpValueName + "_map.get(_key);\n";
           if(jsonType == JsonType.OBJECT){
-            //TODO: change this it's bad
-            /* This do the trick but it is going to be slow to convert json -> map -> json */
+            //TODO: change this!!! it's bad...
+            /* This one does the trick but it is going to be slow to convert json -> map -> json */
+//            code += "System.out.println(\"=======>0:\"+zapposJson.toJson((Map)_m1));\n";
             code += "Object _m2 = zapposJson.fromJson(zapposJson.toJson((Map)_m1), "+componentType.getName()+".class);\n";
-            code += "System.out.println(\"=======>1:\"+_m1);\n";
-            code += "System.out.println(\"=======>2:\"+zapposJson.toJson((Map)_m1));\n";
+//            code += "System.out.println(\"=======>1:\"+_m1);\n";
+//            code += "System.out.println(\"=======>2:\"+zapposJson.toJson((Map)_m1));\n";
           }else if(jsonType == JsonType.ARRAY){
             if(componentType.isArray()){
               componentType = componentType.getComponentType();

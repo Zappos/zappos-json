@@ -142,13 +142,14 @@ public class BeanBindingTest extends AbstractBaseTest {
     
     String json = zapposJson.toJson(bean);
     System.out.println(json);
-
+    
     ContainingMap bean2 = zapposJson.fromJson(json, ContainingMap.class);
+    
     Assert.assertEquals(bean.getStringMap(), bean2.getStringMap());
     Assert.assertEquals(bean.getIntMap(), bean2.getIntMap());
     SimpleBean a = bean.getMapOfObject().get("S1");
     SimpleBean b = bean2.getMapOfObject().get("S1");
-//    Assert.assertEquals(a, b); //TODO: not yet implemented
+    Assert.assertEquals(a, b);
     Assert.assertArrayEquals(bean.getMapOfArray().get("A1"), bean2.getMapOfArray().get("A1"));
     Assert.assertArrayEquals(bean.getMapOfArray().get("A2"), bean2.getMapOfArray().get("A2"));
   }

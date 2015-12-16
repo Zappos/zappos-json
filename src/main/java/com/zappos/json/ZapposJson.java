@@ -204,66 +204,61 @@ public class ZapposJson {
         
       }else{
         
-        if(basicTypeCheck){
+        if(object instanceof String || object instanceof Character) {
           
-          if(object instanceof String || object instanceof Character) {
-            
-            JsonWriter.writeString(this, object.toString(), writer);
-            
-          }else if(object instanceof Number) {
-            
-            JsonWriter.writeNumber(this, (Number)object, writer);
-            
-          }else if(object instanceof Enum) {
-            
-            JsonWriter.writeEnum(this, (Enum<?>)object, writer);
-            
-          }else if(object instanceof Boolean) {
-            
-            JsonWriter.writeBoolean(this, (Boolean)object, writer);
-            
-          }else if(object instanceof Iterable) {
-            
-            JsonWriter.writeIterable(this, (Iterable<?>) object, writer);
-            
-          }else if(object instanceof Map) {
-            
-            JsonWriter.writeMap(this, (Map<?, ?>) object, writer);
-            
-          }else{
-            Class<?> objectType = object.getClass();
-            if(objectType.isArray()){
-              Class<?> componentType = objectType.getComponentType();
-              if(componentType == byte.class){
-                JsonWriter.writeBase64String(this, (byte[])object, writer);
-              }else if(componentType == char.class){
-                JsonWriter.writeArray((char[])object, writer);
-              }else if(componentType == boolean.class){
-                JsonWriter.writeArray((boolean[])object, writer);
-              }else if(componentType == short.class){
-                JsonWriter.writeArray((short[])object, writer);
-              }else if(componentType == int.class){
-                JsonWriter.writeArray((int[])object, writer);
-              }else if(componentType == long.class){
-                JsonWriter.writeArray((long[])object, writer);
-              }else if(componentType == float.class){
-                JsonWriter.writeArray((float[])object, writer);
-              }else if(componentType == double.class){
-                JsonWriter.writeArray((double[])object, writer);
-              }else{
-                JsonWriter.writeArray(this, (Object[]) object, writer);
-              }
+          JsonWriter.writeString(this, object.toString(), writer);
+          
+        }else if(object instanceof Number) {
+          
+          JsonWriter.writeNumber(this, (Number)object, writer);
+          
+        }else if(object instanceof Enum) {
+          
+          JsonWriter.writeEnum(this, (Enum<?>)object, writer);
+          
+        }else if(object instanceof Boolean) {
+          
+          JsonWriter.writeBoolean(this, (Boolean)object, writer);
+          
+        }else if(object instanceof Iterable) {
+          
+          JsonWriter.writeIterable(this, (Iterable<?>) object, writer);
+          
+        }else if(object instanceof Map) {
+          
+          JsonWriter.writeMap(this, (Map<?, ?>) object, writer);
+          
+        }else{
+          Class<?> objectType = object.getClass();
+          if(objectType.isArray()){
+            Class<?> componentType = objectType.getComponentType();
+            if(componentType == byte.class){
+              JsonWriter.writeBase64String(this, (byte[])object, writer);
+            }else if(componentType == char.class){
+              JsonWriter.writeArray((char[])object, writer);
+            }else if(componentType == boolean.class){
+              JsonWriter.writeArray((boolean[])object, writer);
+            }else if(componentType == short.class){
+              JsonWriter.writeArray((short[])object, writer);
+            }else if(componentType == int.class){
+              JsonWriter.writeArray((int[])object, writer);
+            }else if(componentType == long.class){
+              JsonWriter.writeArray((long[])object, writer);
+            }else if(componentType == float.class){
+              JsonWriter.writeArray((float[])object, writer);
+            }else if(componentType == double.class){
+              JsonWriter.writeArray((double[])object, writer);
+            }else{
+              JsonWriter.writeArray(this, (Object[]) object, writer);
             }
+          }else{
+            JsonWriterInvoker writerInvoker = writerCodeGenerator.getWriter(objectType);
+            if(writerInvoker == null){
+              writerInvoker = writerCodeGenerator.registerWriter(objectType);
+            }
+            writerInvoker.writeJson(object, writer);
           }
-          
         }
-        
-        Class<?> objectType = object.getClass();
-        JsonWriterInvoker writerInvoker = writerCodeGenerator.getWriter(objectType);
-        if(writerInvoker == null){
-          writerInvoker = writerCodeGenerator.registerWriter(objectType);
-        }
-        writerInvoker.writeJson(object, writer);
       }
       
     }catch(Exception e){
