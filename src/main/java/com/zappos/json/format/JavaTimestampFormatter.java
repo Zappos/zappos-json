@@ -35,7 +35,7 @@ public class JavaTimestampFormatter extends AbstractValueFormatter<Timestamp> {
   @Override
   public String format(ZapposJson zapposJson, Timestamp object) {
     if(getPattern() != null){
-      return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
+      return toJsonValue(zapposJson, new SimpleDateFormat(getPattern()).format(object));
     }
     return String.valueOf(object.getTime());
   }

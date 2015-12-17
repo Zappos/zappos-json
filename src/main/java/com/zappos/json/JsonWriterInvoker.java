@@ -30,20 +30,31 @@ public class JsonWriterInvoker {
   private Object jsonWriter;
 
   public JsonWriterInvoker(Class<?> dataClass, Object jsonWriter) {
+    
     try {
+      
       this.writerMethod = jsonWriter.getClass().getDeclaredMethod("writeJson",
           dataClass, Writer.class);
+      
     } catch (NoSuchMethodException | SecurityException e) {
       throw new RuntimeException(e);
     }
+    
     this.jsonWriter = jsonWriter;
   }
   
   public void writeJson(Object data, Writer writer) {
+    
     try {
+      
       writerMethod.invoke(jsonWriter, data, writer);
-    } catch (IllegalAccessException | IllegalArgumentException
-        | InvocationTargetException e) {
+      
+    } catch(InvocationTargetException e){
+      
+      throw new RuntimeException(e.getTargetException());
+      
+    } catch (IllegalAccessException | IllegalArgumentException e) {
+      
       throw new RuntimeException(e);
     }
   }

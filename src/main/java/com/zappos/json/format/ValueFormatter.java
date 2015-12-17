@@ -34,7 +34,17 @@ public interface ValueFormatter<T> {
    * @return
    */
   public String format(ZapposJson zapposJson, T object);
-
+  
+  public T cast(Object obj);
+  
+  /**
+   * 
+   * @param zapposJson
+   * @param object
+   * @return
+   */
+  public String formatObject(ZapposJson zapposJson, Object object);
+  
   /**
    * Parse string to target typpe
    * @param string

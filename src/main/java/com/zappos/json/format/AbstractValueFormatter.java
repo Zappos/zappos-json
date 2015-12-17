@@ -33,7 +33,10 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
   
   private boolean jsString = true;
   
-  public abstract T cast(Object obj);
+  @Override
+  public String formatObject(ZapposJson zapposJson, Object object){
+    return format(zapposJson, cast(object));
+  }
   
   @Override
   public ValueFormatter<T> setPattern(String pattern) {
@@ -45,7 +48,13 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
     return pattern;
   }
 
-  public String toJson(ZapposJson zapposJson, String value){
+  /**
+   * 
+   * @param zapposJson
+   * @param value
+   * @return
+   */
+  public String toJsonValue(ZapposJson zapposJson, String value){
     if(jsString){
       StringWriter writer = new StringWriter();
       try{

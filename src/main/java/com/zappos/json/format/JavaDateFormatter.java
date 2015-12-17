@@ -35,7 +35,7 @@ public class JavaDateFormatter extends AbstractValueFormatter<Date> {
   @Override
   public String format(ZapposJson zapposJson, Date object) {
     if(getPattern() != null){
-      return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
+      return toJsonValue(zapposJson, new SimpleDateFormat(getPattern()).format(object));
     }
     return String.valueOf(((Date) object).getTime());/* milliseconds */
   }

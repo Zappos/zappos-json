@@ -42,7 +42,7 @@ public class JavaTimeInstantFormatter extends AbstractValueFormatter<Instant> {
   @Override
   public String format(ZapposJson zapposJson, Instant object) {
     if(formatter != null){
-      return toJson(zapposJson, formatter.format(object));
+      return toJsonValue(zapposJson, formatter.format(object));
     }
     return String.valueOf(object.toEpochMilli());
   }

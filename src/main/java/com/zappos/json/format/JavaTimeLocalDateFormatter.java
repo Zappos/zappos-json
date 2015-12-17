@@ -37,7 +37,7 @@ public class JavaTimeLocalDateFormatter extends AbstractValueFormatter<LocalDate
   
   @Override
   public String format(ZapposJson zapposJson, LocalDate object) {
-    return toJson(zapposJson, formatter.format(object));
+    return toJsonValue(zapposJson, formatter.format(object));
   }
   
   @Override

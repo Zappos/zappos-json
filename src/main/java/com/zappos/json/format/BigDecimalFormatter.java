@@ -35,7 +35,7 @@ public class BigDecimalFormatter extends AbstractNumberFormatter<BigDecimal> {
   @Override
   public String format(ZapposJson zapposJson, BigDecimal object) {
     if(getPattern() != null){
-      return toJson(zapposJson, new DecimalFormat(getPattern()).format(object));
+      return toJsonValue(zapposJson, new DecimalFormat(getPattern()).format(object));
     }
     return object.toString();
   }

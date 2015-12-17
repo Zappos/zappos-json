@@ -15,6 +15,8 @@
 
 package com.zappos.json.util;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Random;
 
 import com.zappos.json.JsonWriter;
@@ -122,6 +124,21 @@ public class Strings {
       return false;
     }
     return true;
+  }
+  
+  public static String fromReader(Reader reader) throws IOException {
+    return fromReader(reader, 1024);
+  }
+  
+  public static String fromReader(Reader reader, int bufferSize) throws IOException {
+    char[] arr = new char[bufferSize];
+    StringBuilder buffer = new StringBuilder();
+    int numCharsRead;
+    while ((numCharsRead = reader.read(arr, 0, arr.length)) != -1) {
+        buffer.append(arr, 0, numCharsRead);
+    }
+    reader.close();
+    return buffer.toString();
   }
   
 }

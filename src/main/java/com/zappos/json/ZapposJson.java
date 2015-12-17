@@ -16,6 +16,7 @@
 package com.zappos.json;
 
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.Instant;
@@ -37,6 +38,8 @@ import com.zappos.json.format.JavaTimestampFormatter;
 import com.zappos.json.format.ValueFormatter;
 import com.zappos.json.util.Reflections;
 import com.zappos.json.util.Strings;
+import com.zappos.json.wrapper.ShortArrayWrapper;
+import com.zappos.json.wrapper.TypeWrapper;
 
 /**
  * 
@@ -193,67 +196,71 @@ public class ZapposJson {
     try{
       
       if(object == null){
-        
         writer.append(JsonWriter.CONST_NULL);
-        
-      }else{
-        
-        if(object instanceof String || object instanceof Character) {
-          
-          JsonWriter.writeString(this, object.toString(), writer);
-          
-        }else if(object instanceof Number) {
-          
-          JsonWriter.writeNumber(this, (Number)object, writer);
-          
-        }else if(object instanceof Enum) {
-          
-          JsonWriter.writeEnum(this, (Enum<?>)object, writer);
-          
-        }else if(object instanceof Boolean) {
-          
-          JsonWriter.writeBoolean(this, (Boolean)object, writer);
-          
-        }else if(object instanceof Iterable) {
-          
-          JsonWriter.writeIterable(this, (Iterable<?>) object, writer);
-          
-        }else if(object instanceof Map) {
-          
-          JsonWriter.writeMap(this, (Map<?, ?>) object, writer);
-          
-        }else{
-          Class<?> objectType = object.getClass();
-          if(objectType.isArray()){
-            Class<?> componentType = objectType.getComponentType();
-            if(componentType == byte.class){
-              JsonWriter.writeBase64String(this, (byte[])object, writer);
-            }else if(componentType == char.class){
-              JsonWriter.writeArray((char[])object, writer);
-            }else if(componentType == boolean.class){
-              JsonWriter.writeArray((boolean[])object, writer);
-            }else if(componentType == short.class){
-              JsonWriter.writeArray((short[])object, writer);
-            }else if(componentType == int.class){
-              JsonWriter.writeArray((int[])object, writer);
-            }else if(componentType == long.class){
-              JsonWriter.writeArray((long[])object, writer);
-            }else if(componentType == float.class){
-              JsonWriter.writeArray((float[])object, writer);
-            }else if(componentType == double.class){
-              JsonWriter.writeArray((double[])object, writer);
-            }else{
-              JsonWriter.writeArray(this, (Object[]) object, writer);
-            }
-          }else{
-            JsonWriterInvoker writerInvoker = writerCodeGenerator.getWriter(objectType);
-            if(writerInvoker == null){
-              writerInvoker = writerCodeGenerator.registerWriter(objectType);
-            }
-            writerInvoker.writeJson(object, writer);
-          }
-        }
+        return;
       }
+      
+      Class<?> objectType = object.getClass();
+      ValueFormatter<?> formatter = VALUE_FORMATTERS.get(objectType);
+      
+      if(formatter != null){
+        
+        String formattedStr = formatter.formatObject(this, object);
+        writer.append(formattedStr);
+        return;
+      }else if(object instanceof Boolean) {
+        
+        JsonWriter.writeBoolean(this, (Boolean)object, writer);
+        return;
+      }else if(object instanceof String || object instanceof Character) {
+        
+        JsonWriter.writeString(this, object.toString(), writer);
+        return;
+      }else if(object instanceof Number) {
+        
+        JsonWriter.writeNumber(this, (Number)object, writer);
+        return;
+      }else if(object instanceof Enum) {
+        
+        JsonWriter.writeEnum(this, (Enum<?>)object, writer);
+        return;
+      }else if(object instanceof Iterable) {
+        
+        JsonWriter.writeIterable(this, (Iterable<?>) object, writer);
+        return;
+      }else if(object instanceof Map) {
+        
+        JsonWriter.writeMap(this, (Map<?, ?>) object, writer);
+        return;
+      }else if(objectType.isArray()){
+        Class<?> componentType = objectType.getComponentType();
+        if(componentType == byte.class){
+          JsonWriter.writeBase64String(this, (byte[])object, writer);
+        }else if(componentType == char.class){
+          JsonWriter.writeArray((char[])object, writer);
+        }else if(componentType == boolean.class){
+          JsonWriter.writeArray((boolean[])object, writer);
+        }else if(componentType == short.class){
+          JsonWriter.writeArray((short[])object, writer);
+        }else if(componentType == int.class){
+          JsonWriter.writeArray((int[])object, writer);
+        }else if(componentType == long.class){
+          JsonWriter.writeArray((long[])object, writer);
+        }else if(componentType == float.class){
+          JsonWriter.writeArray((float[])object, writer);
+        }else if(componentType == double.class){
+          JsonWriter.writeArray((double[])object, writer);
+        }else{
+          JsonWriter.writeArray(this, (Object[]) object, writer);
+        }
+        return;
+      }
+      
+      JsonWriterInvoker writerInvoker = writerCodeGenerator.getWriter(objectType);
+      if(writerInvoker == null){
+        writerInvoker = writerCodeGenerator.registerWriter(objectType);
+      }
+      writerInvoker.writeJson(object, writer);
       
     }catch(Exception e){
       throw new JsonException(e);
@@ -261,28 +268,88 @@ public class ZapposJson {
   }
   
   public <T> T fromJson(String json, Class<T> targetClass) {
-    try{
-      JsonReaderInvoker readerInvoker = readerCodeGenerator.getReader(targetClass);
-      if(readerInvoker == null){
-          readerInvoker = readerCodeGenerator.registerReader(targetClass);
-      }
-      return readerInvoker.readJson(json, targetClass);
-    }catch(Exception e){
-      throw new JsonException(e);
-    }
+    return fromJson(new StringReader(json), targetClass);
   }
-
+  
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public <T> T fromJson(Reader reader, Class<T> targetClass) {
+    
     try{
-      JsonReaderInvoker readerInvoker = readerCodeGenerator.getReader(targetClass);
-      if(readerInvoker == null){
-        readerInvoker = readerCodeGenerator.registerReader(targetClass);
+      
+      ValueFormatter<?> formatter = VALUE_FORMATTERS.get(targetClass);
+      
+      if(formatter != null){
+        String s = Strings.fromReader(reader).trim();
+        return (T)formatter.parse(this, s);
+        
+      }else if(targetClass == Boolean.class){
+        
+        String s = Strings.fromReader(reader).trim();
+        return (T)Boolean.valueOf(s);
+        
+      }else if(targetClass == String.class){
+        
+        return (T)Strings.fromReader(reader).trim();
+        
+      }else if(targetClass == Character.class) {
+        
+        String s = Strings.fromReader(reader).trim();
+        return (T)new Character(s.charAt(0)); //TODO: should throw exception when length != 1? 
+        
+      }else if(Number.class.isAssignableFrom(targetClass)) {
+        
+        String s = Strings.fromReader(reader).trim();
+        if(Byte.class.isAssignableFrom(targetClass)){
+          return (T)Byte.valueOf(s);
+        }else if(Short.class.isAssignableFrom(targetClass)){
+          return (T)Short.valueOf(s);
+        }else if(Integer.class.isAssignableFrom(targetClass)){
+          return (T)Integer.valueOf(s);
+        }else if(Long.class.isAssignableFrom(targetClass)){
+          return (T)Long.valueOf(s);
+        }else if(Float.class.isAssignableFrom(targetClass)){
+          return (T)Float.valueOf(s);
+        }else if(Double.class.isAssignableFrom(targetClass)){
+          return (T)Double.valueOf(s);
+        }else{
+          throw new IllegalArgumentException(targetClass.getName() +" is an unsupported type." +
+              "You need a custom ValueFormatter for this type.");
+        }
+      }else if(targetClass.isEnum()) {
+        
+        String s = Strings.fromReader(reader).trim();
+        return (T)Enum.valueOf((Class<? extends Enum>)targetClass, s);
+        
+      }else if(Iterable.class.isAssignableFrom(targetClass) ||
+          Map.class.isAssignableFrom(targetClass)) {
+        
+        //TODO: what should we do with these types?
+        //TODO: we should use String/Number/Array/Map type for generic parameter depending on JSON type.
+        throw new IllegalArgumentException(targetClass.getName() +" not support yet");
+      
+      }else if(targetClass.isArray()){
+        TypeWrapper<?> wrapper = null;
+        if(targetClass.getComponentType() == short.class){
+          wrapper = readObjectFromJson(reader, ShortArrayWrapper.class);
+        }
+        return (T)wrapper.getTarget();
       }
-      return readerInvoker.readJson(reader, targetClass);
+      
+      return readObjectFromJson(reader, targetClass);
+     
     }catch(Exception e){
       throw new JsonException(e);
     }
   }
+  
+  protected <T>T readObjectFromJson(Reader reader, Class<T> targetClass) throws Exception{
+    JsonReaderInvoker readerInvoker = readerCodeGenerator.getReader(targetClass);
+    if(readerInvoker == null){
+      readerInvoker = readerCodeGenerator.registerReader(targetClass);
+    }
+    return readerInvoker.readJson(reader, targetClass);
+  }
+  
   
   protected void debug(String pattern, Object... args) {
     if (debug) {

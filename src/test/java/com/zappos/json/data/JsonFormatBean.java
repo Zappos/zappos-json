@@ -50,9 +50,9 @@ public class JsonFormatBean {
     @Override
     public String format(ZapposJson zapposJson, Date object) {
       if(getPattern() != null){
-        return toJson(zapposJson, new SimpleDateFormat(getPattern()).format(object));
+        return toJsonValue(zapposJson, new SimpleDateFormat(getPattern()).format(object));
       }
-      return toJson(zapposJson, FIXED_DATE_STRING);
+      return toJsonValue(zapposJson, FIXED_DATE_STRING);
     }
     
     @Override
