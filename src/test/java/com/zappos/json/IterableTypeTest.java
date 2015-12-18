@@ -13,25 +13,26 @@
  * language governing permissions and limitations under the License.
  */
 
-package com.zappos.json.wrapper;
+package com.zappos.json;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Hussachai Puripunpinyo
  *
  */
-public class ShortArrayWrapper implements TypeWrapper<short[]>{
-  
-  private short[] target;
+public class IterableTypeTest extends AbstractBaseTest {
 
-  @Override
-  public void setTarget(short[] target) {
-    this.target = target;
+  @Test
+  public void notSupportYet(){
+    try{
+      String json = "[1,2,3]";
+      zapposJson.fromJson(json, Iterable.class);
+      Assert.fail();
+    }catch(JsonException e){
+      if(!(e.getCause() instanceof IllegalArgumentException)) Assert.fail();
+    }
   }
-
-  @Override
-  public short[] getTarget() {
-    return target;
-  }
-  
 }

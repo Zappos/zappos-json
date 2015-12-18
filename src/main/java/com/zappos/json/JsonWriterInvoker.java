@@ -51,7 +51,7 @@ public class JsonWriterInvoker {
       
     } catch(InvocationTargetException e){
       
-      throw new RuntimeException(e.getTargetException());
+      throw new JsonException(e.getTargetException());
       
     } catch (IllegalAccessException | IllegalArgumentException e) {
       

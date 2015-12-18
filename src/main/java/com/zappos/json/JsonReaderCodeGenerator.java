@@ -79,8 +79,7 @@ public class JsonReaderCodeGenerator {
       List<PathAndCode> pathAndCodes = generateJsonReaderBody(clazz);
   
       /*
-       * Compiler will optimize if(String.equals) when the number of conditions <=
-       * 16
+       * Compiler will optimize if(String.equals) when the number of conditions <= 16
        */
       if (pathAndCodes.size() > 16
           && new HashSet<>(pathAndCodes).size() == pathAndCodes.size()) {

@@ -19,19 +19,30 @@ package com.zappos.json.wrapper;
  * 
  * @author Hussachai Puripunpinyo
  *
+ * @param <T>
  */
-public class BooleanArrayWrapper implements TypeWrapper<boolean[]>{
+public class ArrayTypeWrapper<T> implements TypeWrapper<T>{
   
-  private boolean[] target;
-
+  private Class<?> componentType;
+  
+  private T target;
+  
   @Override
-  public void setTarget(boolean[] target) {
+  public void setTarget(T target) {
     this.target = target;
   }
-
+  
   @Override
-  public boolean[] getTarget() {
+  public T getTarget() {
     return target;
+  }
+
+  public Class<?> getComponentType() {
+    return componentType;
+  }
+
+  public void setComponentType(Class<?> componentType) {
+    this.componentType = componentType;
   }
   
 }

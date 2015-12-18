@@ -14,9 +14,6 @@
  */
 package com.zappos.json;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.zappos.json.data.SimpleBean;
@@ -28,11 +25,25 @@ import com.zappos.json.data.SimpleBean;
  */
 public class ExceptionTest extends AbstractBaseTest {
   
-  @Test
-  public void readBasicType(){
-    List<SimpleBean> l = new ArrayList<>();
-    l.add(createSimpleBean());
-    l.add(createSimpleBean());
-    System.out.println(zapposJson.toJson(l));
+  @Test(expected = NumberFormatException.class)
+  public void testPrimitiveTypeMismatch() throws Throwable {
+    try{
+      String json = "Hello";
+      zapposJson.fromJson(json, Integer.class);
+    }catch(JsonException e){
+      throw e.getCause();
+    }
   }
+  
+  @Test(expected = ClassCastException.class)
+  public void testTypeMismatch() throws Throwable {
+    try{
+      String json = "{\"b\":[1,2],\"b2\":false,\"d\":1.0,\"d2\":2.0,\"i\":1,\"i2\":2,\"string\":\"simple\"}";
+      zapposJson.fromJson(json, SimpleBean.class);
+    }catch(JsonException e){
+      throw e.getCause();
+    }
+  }
+  
+  
 }

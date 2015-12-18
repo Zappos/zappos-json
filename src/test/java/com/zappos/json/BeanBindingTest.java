@@ -192,37 +192,5 @@ public class BeanBindingTest extends AbstractBaseTest {
     Assert.assertEquals(bean.getBigDecimal(), bean2.getBigDecimal());
 
   }
-
-  public static void main(String[] args) {
-    ContainingMap bean = new ContainingMap();
-    
-//    Map<String, String> stringMap = new HashMap<>();
-//    stringMap.put("A", "1");
-//    stringMap.put("B", "2");
-//    bean.setStringMap(stringMap);
-//    
-//    Map<String, Integer> intMap = new HashMap<>();
-//    intMap.put("A", 1);
-//    intMap.put("B", 2);
-//    bean.setIntMap(intMap);
-    
-    Map<String, SimpleBean> mapOfObject = new HashMap<>();
-    mapOfObject.put("S1", createSimpleBean());
-    mapOfObject.put("S2", createSimpleBean());
-    bean.setMapOfObject(mapOfObject);
-    
-//    Map<String, ContainingArray> mapOfObject2 = new HashMap<>();
-//    mapOfObject2.put("A1", new ContainingArray());
-//    bean.setMapOfObject2(mapOfObject2);
-//    
-//    Map<String, Integer[]> mapOfArray = new HashMap<>();
-//    mapOfArray.put("A1", new Integer[]{1,2,3});
-//    mapOfArray.put("A2", new Integer[]{4,5,6});
-//    bean.setMapOfArray(mapOfArray);
-//    
-    String json = zapposJson.toJson(bean);
-    System.out.println(json);
-    
-    zapposJson.fromJson(json, ContainingMap.class);
-  }
+  
 }

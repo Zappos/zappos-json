@@ -38,8 +38,6 @@ import com.zappos.json.format.JavaTimestampFormatter;
 import com.zappos.json.format.ValueFormatter;
 import com.zappos.json.util.Reflections;
 import com.zappos.json.util.Strings;
-import com.zappos.json.wrapper.ShortArrayWrapper;
-import com.zappos.json.wrapper.TypeWrapper;
 
 /**
  * 
@@ -261,7 +259,9 @@ public class ZapposJson {
         writerInvoker = writerCodeGenerator.registerWriter(objectType);
       }
       writerInvoker.writeJson(object, writer);
-      
+    
+    }catch(JsonException e){
+      throw e;
     }catch(Exception e){
       throw new JsonException(e);
     }
@@ -282,34 +282,41 @@ public class ZapposJson {
         String s = Strings.fromReader(reader).trim();
         return (T)formatter.parse(this, s);
         
-      }else if(targetClass == Boolean.class){
+      }else if(targetClass == Boolean.class || targetClass == boolean.class){
         
         String s = Strings.fromReader(reader).trim();
         return (T)Boolean.valueOf(s);
         
       }else if(targetClass == String.class){
         
-        return (T)Strings.fromReader(reader).trim();
+        String s = Strings.fromReader(reader).trim();
+        if(s.charAt(0) != '"' || s.charAt(s.length() - 1) != '"'){
+          throw new IllegalArgumentException("Invalid string: " + s);
+        }
+        return (T)s.subSequence(1, s.length() - 1);
         
-      }else if(targetClass == Character.class) {
+      }else if(targetClass == Character.class || targetClass == char.class) {
         
         String s = Strings.fromReader(reader).trim();
-        return (T)new Character(s.charAt(0)); //TODO: should throw exception when length != 1? 
+        if(s.charAt(0) != '"' || s.charAt(2) != '"'){
+          throw new IllegalArgumentException("Invalid character: " + s);
+        }
+        return (T)new Character(s.charAt(1)); //TODO: revise this
         
-      }else if(Number.class.isAssignableFrom(targetClass)) {
+      }else if(Number.class.isAssignableFrom(targetClass) || targetClass.isPrimitive()) {
         
         String s = Strings.fromReader(reader).trim();
-        if(Byte.class.isAssignableFrom(targetClass)){
+        if(targetClass == Byte.class || targetClass == byte.class){
           return (T)Byte.valueOf(s);
-        }else if(Short.class.isAssignableFrom(targetClass)){
+        }else if(targetClass == Short.class || targetClass == short.class){
           return (T)Short.valueOf(s);
-        }else if(Integer.class.isAssignableFrom(targetClass)){
+        }else if(targetClass == Integer.class || targetClass == int.class){
           return (T)Integer.valueOf(s);
-        }else if(Long.class.isAssignableFrom(targetClass)){
+        }else if(targetClass == Long.class || targetClass == long.class){
           return (T)Long.valueOf(s);
-        }else if(Float.class.isAssignableFrom(targetClass)){
+        }else if(targetClass == Float.class || targetClass == float.class){
           return (T)Float.valueOf(s);
-        }else if(Double.class.isAssignableFrom(targetClass)){
+        }else if(targetClass == Double.class || targetClass == double.class){
           return (T)Double.valueOf(s);
         }else{
           throw new IllegalArgumentException(targetClass.getName() +" is an unsupported type." +
@@ -323,33 +330,28 @@ public class ZapposJson {
       }else if(Iterable.class.isAssignableFrom(targetClass) ||
           Map.class.isAssignableFrom(targetClass)) {
         
-        //TODO: what should we do with these types?
-        //TODO: we should use String/Number/Array/Map type for generic parameter depending on JSON type.
+        //What should we do with these types?
+        //TODO: Should we use String/Boolean/Number/Array/Map type for generic parameter depending on JSON type?
         throw new IllegalArgumentException(targetClass.getName() +" not support yet");
       
       }else if(targetClass.isArray()){
-        TypeWrapper<?> wrapper = null;
-        if(targetClass.getComponentType() == short.class){
-          wrapper = readObjectFromJson(reader, ShortArrayWrapper.class);
-        }
-        return (T)wrapper.getTarget();
+        //TODO: add type hinting
+        throw new IllegalArgumentException("Array type not support yet");
       }
       
-      return readObjectFromJson(reader, targetClass);
-     
+      JsonReaderInvoker readerInvoker = readerCodeGenerator.getReader(targetClass);
+      if(readerInvoker == null){
+        readerInvoker = readerCodeGenerator.registerReader(targetClass);
+      }
+      
+      return readerInvoker.readJson(reader, targetClass);
+    
+    }catch(JsonException e){
+      throw e;
     }catch(Exception e){
       throw new JsonException(e);
     }
   }
-  
-  protected <T>T readObjectFromJson(Reader reader, Class<T> targetClass) throws Exception{
-    JsonReaderInvoker readerInvoker = readerCodeGenerator.getReader(targetClass);
-    if(readerInvoker == null){
-      readerInvoker = readerCodeGenerator.registerReader(targetClass);
-    }
-    return readerInvoker.readJson(reader, targetClass);
-  }
-  
   
   protected void debug(String pattern, Object... args) {
     if (debug) {

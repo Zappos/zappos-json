@@ -51,7 +51,7 @@ public class JsonReaderInvoker {
       
     } catch (InvocationTargetException e) {
       
-      throw new RuntimeException(e.getTargetException());
+      throw new JsonException(e.getTargetException());
       
     } catch (InstantiationException | IllegalAccessException
         | IllegalArgumentException e) {

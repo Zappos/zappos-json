@@ -13,25 +13,28 @@
  * language governing permissions and limitations under the License.
  */
 
-package com.zappos.json.wrapper;
+package com.zappos.json;
+
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  * @author Hussachai Puripunpinyo
  *
  */
-public class ByteArrayWrapper implements TypeWrapper<byte[]>{
+public class MapTypeTest extends AbstractBaseTest {
   
-  private byte[] target;
-
-  @Override
-  public void setTarget(byte[] target) {
-    this.target = target;
+  @Test
+  public void notSupportYet(){
+    try{
+      String json = "{}";
+      zapposJson.fromJson(json, Map.class);
+      Assert.fail();
+    }catch(JsonException e){
+      if(!(e.getCause() instanceof IllegalArgumentException)) Assert.fail();
+    }
   }
-
-  @Override
-  public byte[] getTarget() {
-    return target;
-  }
-  
 }
