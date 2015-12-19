@@ -11,3 +11,5 @@ target/
 
 src/test/java/testmain/
 src/test/java/com/zappos/json/Scratchpad.java
+
+benchmark/

@@ -16,7 +16,6 @@
 package com.zappos.json;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

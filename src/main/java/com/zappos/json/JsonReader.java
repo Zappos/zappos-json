@@ -84,13 +84,13 @@ public class JsonReader {
    * [l|m|n|o|p|q|r|s|t|?|?] < buffer ^ ^ | index fill
    */
 
-  public JsonReader(ZapposJson jacinda, String string) {
-    this(jacinda, new StringReader(string), Math.max(MIN_BUFFER_SIZE,
+  public JsonReader(ZapposJson zapposJson, String string) {
+    this(zapposJson, new StringReader(string), Math.max(MIN_BUFFER_SIZE,
         Math.min(DEFAULT_BUFFER_SIZE, string.length())));
   }
 
-  public JsonReader(ZapposJson jacinda, Reader reader) {
-    this(jacinda, reader, DEFAULT_BUFFER_SIZE);
+  public JsonReader(ZapposJson zapposJson, Reader reader) {
+    this(zapposJson, reader, DEFAULT_BUFFER_SIZE);
   }
 
   public JsonReader(ZapposJson jacinda, Reader reader, int buffersize) {

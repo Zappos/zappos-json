@@ -36,6 +36,7 @@ import com.zappos.json.format.JavaTimeInstantFormatter;
 import com.zappos.json.format.JavaTimeLocalDateFormatter;
 import com.zappos.json.format.JavaTimestampFormatter;
 import com.zappos.json.format.ValueFormatter;
+import com.zappos.json.util.JsonUtils;
 import com.zappos.json.util.Reflections;
 import com.zappos.json.util.Strings;
 
@@ -152,7 +153,7 @@ public class ZapposJson {
     READER_CONFIGS[config.ordinal()] = true;
   }
   
-  protected synchronized boolean is(ReaderConfig config){
+  public synchronized boolean is(ReaderConfig config){
     return READER_CONFIGS[config.ordinal()];
   }
   
@@ -160,7 +161,7 @@ public class ZapposJson {
     WRITER_CONFIGS[config.ordinal()] = true;
   }
   
-  protected synchronized boolean is(WriterConfig config){
+  public synchronized boolean is(WriterConfig config){
     return WRITER_CONFIGS[config.ordinal()];
   }
   
@@ -287,21 +288,13 @@ public class ZapposJson {
         String s = Strings.fromReader(reader).trim();
         return (T)Boolean.valueOf(s);
         
-      }else if(targetClass == String.class){
+      }else if(targetClass == String.class || targetClass == Character.class || targetClass == char.class){
         
         String s = Strings.fromReader(reader).trim();
         if(s.charAt(0) != '"' || s.charAt(s.length() - 1) != '"'){
           throw new IllegalArgumentException("Invalid string: " + s);
         }
-        return (T)s.subSequence(1, s.length() - 1);
-        
-      }else if(targetClass == Character.class || targetClass == char.class) {
-        
-        String s = Strings.fromReader(reader).trim();
-        if(s.charAt(0) != '"' || s.charAt(2) != '"'){
-          throw new IllegalArgumentException("Invalid character: " + s);
-        }
-        return (T)new Character(s.charAt(1)); //TODO: revise this
+        return (T)JsonUtils.unescape(this, s.subSequence(1, s.length() - 1));
         
       }else if(Number.class.isAssignableFrom(targetClass) || targetClass.isPrimitive()) {
         
