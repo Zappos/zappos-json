@@ -86,18 +86,18 @@ public class ZapposJson {
     this.debug = debug;
   }
 
-  public static enum JacindaSingleton {
+  public static enum ZapposJsonSingleton {
     INSTANCE;
 
-    ZapposJson jacinda = new ZapposJson();
+    ZapposJson zapposJson = new ZapposJson();
 
     public ZapposJson get() {
-      return jacinda;
+      return zapposJson;
     }
   }
 
   public static ZapposJson getInstance() {
-    return JacindaSingleton.INSTANCE.get();
+    return ZapposJsonSingleton.INSTANCE.get();
   }
 
   public synchronized static ZapposJson getInstance(String name) {
