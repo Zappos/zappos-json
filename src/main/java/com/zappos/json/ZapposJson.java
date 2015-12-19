@@ -294,8 +294,14 @@ public class ZapposJson {
         if(s.charAt(0) != '"' || s.charAt(s.length() - 1) != '"'){
           throw new IllegalArgumentException("Invalid string: " + s);
         }
-        return (T)JsonUtils.unescape(this, s.subSequence(1, s.length() - 1));
-        
+        s = JsonUtils.unescape(this, s.subSequence(1, s.length() - 1));
+        if(targetClass == Character.class || targetClass == char.class){
+          if(s.length() != 1){
+            throw new IllegalArgumentException("Invalid character: " + s);
+          }
+          return (T)new Character(s.charAt(0));
+        }
+        return (T)s;
       }else if(Number.class.isAssignableFrom(targetClass) || targetClass.isPrimitive()) {
         
         String s = Strings.fromReader(reader).trim();
