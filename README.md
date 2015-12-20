@@ -11,20 +11,19 @@ different JSON settings for each instance.
 
 Zappos JSON is designed to make it difficult for you to do it wrong. For example, you are
 encouraged to use only one instance. So, the constructor is protected and cannot be called directly.
-You have to use a factory method `ZapposJson.getInstance()` to get an instance. If there is more than
+You have to use a factory method `ZapposJson.getInstance()` to get an instance. If you want to have more than
 one instances, you can call `ZapposJson.getInstance(name)` and provide the name of the setting.
 
 ##Features##
 The main feature of Zappos JSON is a bean binding. It does not have JSON typed object because we try to eliminate
-as many intermediate objects as possible. Zappos JSON is a drop-in replacement for Google Gson.
-If you use Gson for bean binding only, why not Zappos JSON? It's faster and smaller :)
+as many intermediate objects as possible.
 
 - Binding bean is an easy job. (Can do it in one line)
 - Primitive types and its wrapper
 - Array and Collection
 - Nested bean.
 - Custom type such as Date, Enum, and other scalar-value types.
-- Map of scalar value
+- Map of scalar value and map of object.
 - You can mixed all of above together. 
 - Annotation support 
 
@@ -77,19 +76,14 @@ System.out.println(Arrays.toString(foo2.getBar().getValues()));
 
 ##Current Limitation##
 - Map key must be string (It doesn't make much sense to have other types besides String though)
-- Jacinda does not support Map of object. You can use Map of scalar value such as Integer, Double, String, or any other scalar types.
+- The parser doesn't support map and collection that are not inside of the bean. We need type hinting to make this thing works. Type hinting will be added in the future.
 - Does not detect circular reference.
 - Bean is required to have public default constructor.
 
 ##FAQ##
-###Why it does not support Map of object? ###
-Because Zappos JSON uses static analysis and the key of Map is dynamic. With current design, it's hard to make it supports
-Map of object. It doesn't support right now doesn't mean it will not support in the future. We may end up using reflection
-for that case.
-
 ###Why Zappos JSON is so slow?###
 It's supposed not to. Possibly it is slow for the first time because it does static analyzing on your object graph
-and generate code then compile and load it into memory. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
+then it generates code, compile, and load the generated class file into memory. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
 
 ###Why Zappos JSON doesn't let developer call constructor directly?###
 Zappos JSON uses byte code manipulation. Each instance holds the cache of modified classes with unique name (random name).
