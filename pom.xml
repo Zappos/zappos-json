@@ -21,7 +21,13 @@
       </roles>
     </developer>
   </developers>
-
+  
+  <scm>
+    <connection>scm:git:git://github.com/Zappos/zappos-json.git</connection>
+    <developerConnection>scm:git:git@github.com:Zappos/zappos-json.git</developerConnection>
+    <url>http://github.com/Zappos/zappos-json</url>
+  </scm>
+    
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
