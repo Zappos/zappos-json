@@ -5,7 +5,10 @@
   <artifactId>zappos-json</artifactId>
   <version>0.1-alpha</version>
   <description>
-	</description>
+    Zappos-json is a Java library that can be used to convert plain old Java objects (POJO) 
+    into their JSON representation, and vice versa. It uses code generation technique
+    to improve the performance by inlining serialization-related code into a generated class file.
+  </description>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
