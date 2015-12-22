@@ -34,7 +34,7 @@ public @interface JsonFormat {
   
   /**
    * Format pattern
-   * @return
+   * @return the format string
    */
   String value() default "";
   

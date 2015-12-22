@@ -19,7 +19,7 @@ package com.zappos.json.wrapper;
  * 
  * @author Hussachai Puripunpinyo
  *
- * @param <T>
+ * @param <T> the type of target
  */
 public interface TypeWrapper<T> {
   

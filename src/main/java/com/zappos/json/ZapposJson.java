@@ -168,10 +168,8 @@ public class ZapposJson {
   /**
    * Try to format specified value with the formatter in a registry.
    * This method throws {@link NullPointerException} when the specified value is null.
-   * @param value
-   * @param defaultValue
+   * @param value the object being formatted
    * @return formatted value or value.toString when there is no formatter
-   * @throws NullPointerException
    */
   public String format(Object value) {
     ValueFormatter<Object> valueFormatter = VALUE_FORMATTERS.get(value.getClass());

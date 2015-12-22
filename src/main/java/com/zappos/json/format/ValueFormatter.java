@@ -29,9 +29,9 @@ public interface ValueFormatter<T> {
   /**
    * Format specified object to string. The result will not be escaped. The
    * object formatter is responsible for JSON escaping.
-   * 
-   * @param object
-   * @return
+   * @param zapposJson the instance of @{../ZapposJson}
+   * @param object the object being serialized to JSON data
+   * @return string representing JSON data
    */
   public String format(ZapposJson zapposJson, T object);
   
@@ -39,17 +39,17 @@ public interface ValueFormatter<T> {
   
   /**
    * 
-   * @param zapposJson
-   * @param object
-   * @return
+   * @param zapposJson the instance of @{../ZapposJson}
+   * @param object the object being serialized to JSON data
+   * @return string representing JSON data
    */
   public String formatObject(ZapposJson zapposJson, Object object);
   
   /**
    * Parse string to target typpe
-   * @param string
-   * @return
-   * @throws Exception
+   * @param string the JSON data in string format
+   * @return the object being deserialized from JSON data
+   * @throws Exception can be any kinds of exception
    */
   public T parse(ZapposJson zapposJson, String string) throws Exception;
 

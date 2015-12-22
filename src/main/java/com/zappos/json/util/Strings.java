@@ -50,9 +50,9 @@ public class Strings {
    * Simplest formatter. It does not support escaping or any kinds of fancy
    * feature. It just fill the placeholder '@' with supplied argument values.
    * 
-   * @param pattern
-   * @param args
-   * @return
+   * @param pattern the pattern being used by formatter
+   * @param args the arguments for the formatter
+   * @return formatted value as a string
    */
   public static String format(String pattern, Object... args) {
 
@@ -105,8 +105,8 @@ public class Strings {
 
   /**
    * 
-   * @param s
-   * @return
+   * @param s the string object
+   * @return boolean indicating whether specified string is number
    */
   public static boolean isNumber(String s){
     if(s == null || s.length() == 0) return false;

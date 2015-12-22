@@ -121,12 +121,13 @@ public class JsonWriter {
    * TODO: How can we avoid duplicate code for array of native type?
    * writeArray(byte[]) is not defined in a favor of writeString(byte[], writer) 
    */
+  
+  
   /**
    * 
-   * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of char
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(char[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -145,9 +146,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of boolean
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(boolean[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -164,9 +165,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of short
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(short[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -183,9 +184,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of int
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(int[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -202,9 +203,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of long
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(long[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -221,9 +222,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of float
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(float[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);
@@ -240,9 +241,9 @@ public class JsonWriter {
   
   /**
    * 
-   * @param values
-   * @param writer
-   * @throws IOException
+   * @param values the array of double
+   * @param writer the writer object
+   * @throws IOException the exception that might throw when I/O operation performs
    */
   public static void writeArray(double[] values, Writer writer) throws IOException {
     writer.append(JsonWriter.CONST_OPEN_ARRAY);

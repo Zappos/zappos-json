@@ -44,9 +44,9 @@ public final class Reflections {
   /**
    * Recursively find the field by name up to the top of class hierarchy.
    * 
-   * @param clazz
-   * @param fieldName
-   * @return
+   * @param clazz the class object
+   * @param fieldName declared field name of specified class
+   * @return the field object
    */
   public static Field getField(Class<?> clazz, String fieldName)
       throws NoSuchFieldException {

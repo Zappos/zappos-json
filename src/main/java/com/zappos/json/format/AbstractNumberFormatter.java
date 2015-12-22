@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * 
  * @author Hussachai Puripunpinyo
  *
- * @param <T>
+ * @param <T> the type extending @{Number} type
  */
 public abstract class AbstractNumberFormatter<T extends Number> extends AbstractValueFormatter<T>{
 

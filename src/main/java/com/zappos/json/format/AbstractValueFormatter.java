@@ -50,9 +50,9 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
 
   /**
    * 
-   * @param zapposJson
-   * @param value
-   * @return
+   * @param zapposJson the instance of @{../ZapposJson}
+   * @param value JSON value in string format
+   * @return the string representing JSON value
    */
   public String toJsonValue(ZapposJson zapposJson, String value){
     if(jsString){
@@ -72,7 +72,7 @@ public abstract class AbstractValueFormatter<T> implements ValueFormatter<T>{
   
   /**
    * 
-   * @return
+   * @return boolean indicating string or else
    */
   public boolean isJsString(){
     return jsString;
