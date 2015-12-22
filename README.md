@@ -81,6 +81,10 @@ System.out.println(Arrays.toString(foo2.getBar().getValues()));
 - Bean is required to have public default constructor.
 
 ##FAQ##
+###What Java version does it require?
+The project requires Java 8 and later to compile. But, it will run on Java 7.
+On the other hand, the jar file works with Java 7.
+
 ###Why Zappos JSON is so slow?###
 It's supposed not to. Possibly it is slow for the first time because it does static analyzing on your object graph
 then it generates code, compile, and load the generated class file into memory. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
@@ -89,7 +93,6 @@ then it generates code, compile, and load the generated class file into memory. 
 Zappos JSON uses byte code manipulation. Each instance holds the cache of modified classes with unique name (random name).
 If developer calls the constructor inside the method, the system will crash very soon because of the notorious
 exception on JVM - "java.lang.OutOfMemoryError: PermGen space"
-
 
 
 
