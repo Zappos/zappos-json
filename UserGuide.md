@@ -27,7 +27,8 @@ the private field directly.
 
 ## <a name="TOC-ZJ-Performance"></a>ZJ Performance
 Zappos-json is designed from the ground up with performance in mind. It's thread-safe and it should perform very fast
-because it generates the custom code to serialize and de-serialize based on your Java class definition. It uses javasisst toolkit to write a custom byte code that is optimized for your bean specifically.
+because it generates the custom code for serializing and de-serializing based on your Java class definition. 
+It uses javasisst toolkit to write a custom byte code that is optimized for your bean specifically.
 
 ## <a name="TOC-Goals-for-ZJ"></a>Goals for ZJ
 * Provide an easy way to convert POJO to JSON and vice versa. 
