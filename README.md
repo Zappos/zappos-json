@@ -14,6 +14,18 @@ encouraged to use only one instance. So, the constructor is protected and cannot
 You have to use a factory method `ZapposJson.getInstance()` to get an instance. If you want to have more than
 one instances, you can call `ZapposJson.getInstance(name)` and provide the name of the setting.
 
+##Using Zappos JSON with Maven
+
+```xml
+<dependencies>
+    <dependency>
+      <groupId>com.zappos</groupId>
+      <artifactId>zappos-json</artifactId>
+      <version>0.1-alpha</version>
+    </dependency>
+</dependencies>
+```
+
 ##Features##
 The main feature of Zappos JSON is a bean binding. It does not have JSON typed object because we try to eliminate
 as many intermediate objects as possible.
@@ -90,8 +102,7 @@ It's supposed not to. Possibly it is slow for the first time because it does sta
 then it generates code, compile, and load the generated class file into memory. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
 
 ###Why Zappos JSON doesn't let developer call constructor directly?###
-Zappos JSON uses byte code manipulation. Each instance holds the cache of modified classes with unique name (random name).
-If developer calls the constructor inside the method, the system will crash very soon because of the notorious
+Zappos JSON uses byte code manipulation. Each instance holds the cache of modified classes with unique name (random name). If developer calls the constructor inside the method, the system will crash very soon because of the notorious
 exception on JVM - "java.lang.OutOfMemoryError: PermGen space"
 
 
