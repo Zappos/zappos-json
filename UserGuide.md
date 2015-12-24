@@ -74,7 +74,7 @@ Long three = zj.fromJson("1", Long.class);
 Boolean yes = zj.fromJson("true", Boolean.class);
 String str = zj.fromJson("\"abc\"", String.class);
 ```
-### <a name="#TOC-Object-Examples"></a>Object Examples
+### <a name="TOC-Object-Examples"></a>Object Examples
 
 The class that can be used with ZJ must have public default constructor. All the properties that you
 want to serialize/deserialize must have a pair of getter and setter. Otherwise, they will be ignored.
@@ -112,7 +112,7 @@ System.out.println(json);
 obj = zj.fromJson(json, MyObject.class);
 ```
 
-### <a name="#TOC-Nested-Object-Examples"></a>Nested Object Examples
+### <a name="TOC-Nested-Object-Examples"></a>Nested Object Examples
 
 You can use nested object by embedding one class to another as long as there is no circular references
 between them. You also can use nested class but the nested class must be public and static since
@@ -150,7 +150,7 @@ System.out.println(foo.getBar().getName());
 //Anonymous
 ```
 
-### <a name="#TOC-Array-Examples"></a>Array Examples
+### <a name="TOC-Array-Examples"></a>Array Examples
  
 ```java
 public class Foo {
@@ -201,7 +201,7 @@ System.out.println(Arrays.toString(array.getFoo().getBigNumbers()));
 ```
 Currently, we don't support multi-dimensional array but we do support array of object type.
 
-### <a name="#TOC-Collection-Examples"></a>Collection Examples
+### <a name="TOC-Collection-Examples"></a>Collection Examples
 
 ```java
 public class MyCollection {
@@ -263,7 +263,7 @@ the generic type will be erased by the compiler. There is no way to retrieve the
 information at run-time. We have to implement type hinting to overcome that limitation.
 
 
-### <a name="#TOC-Map-Examples"></a>Map Examples
+### <a name="TOC-Map-Examples"></a>Map Examples
 
 ```java
 public class Foo {
@@ -334,7 +334,7 @@ the concrete type of Map. Current limitation is that the map key must be string 
 support either Map of Map or Map of Collection. The type hinting is required because the generic type
 will be erased by the compiler. Type hinting will be introduce in future version.
 
-### <a name="#TOC-Object-Formatter-Examples"></a>Object Formatter Examples
+### <a name="TOC-Object-Formatter-Examples"></a>Object Formatter Examples
 
 If you have the object that should represent scalar value in JSON format, you should
 register the object formatter for that type of object. Otherwise, ZJ will treat that object
@@ -403,7 +403,7 @@ ZJ comes with a set of default object formatters. You don't have to define most 
 object such as java.math.BigDecimal, java.math.BigInteger, java.util.Date, java.sql.Date,
 java.sql.Time, java.sql.Timestamp, java.time.Instant, java.time.LocalDate.
 
-### <a name="#TOC-Annotation-Examples"></a>Annotation Examples
+### <a name="TOC-Annotation-Examples"></a>Annotation Examples
 
 ```java
 public static enum Gender {
@@ -468,7 +468,7 @@ convert CamelCase to snake_case and vise versa. @JsonKey annotation allows you t
 use a custom key for an annotated property. There are also other annotations that
 you can use to customize how ZJ serialize/deserialize.
 
-### <a name="#TOC-Base64-Examples"></a>Base64 Examples
+### <a name="TOC-Base64-Examples"></a>Base64 Examples
 
 ZJ encodes the byte array using Base64 algorithm automatically.
 
