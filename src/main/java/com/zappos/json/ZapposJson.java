@@ -59,9 +59,9 @@ public class ZapposJson {
   
   private JsonReaderCodeGenerator readerCodeGenerator;
   
-  public final boolean[] WRITER_CONFIGS = new boolean[WriterConfig.values().length];
+  private final boolean[] WRITER_CONFIGS = new boolean[WriterConfig.values().length];
   
-  public final boolean[] READER_CONFIGS = new boolean[ReaderConfig.values().length];
+  private final boolean[] READER_CONFIGS = new boolean[ReaderConfig.values().length];
   
   protected ZapposJson() {
     

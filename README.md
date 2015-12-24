@@ -39,6 +39,10 @@ as many intermediate objects as possible.
 - You can mixed all of above together. 
 - Annotation support 
 
+##User Guide##
+Zappos JSON [user guide](https://github.com/zappos/zappos-json/blob/master/UserGuide.md):
+This user guide contains several basic examples on how to use Zappos JSON.
+
 ##Usage##
 
 ```java
@@ -98,8 +102,7 @@ The project requires Java 8 and later to compile. But, it will run on Java 7.
 On the other hand, the jar file works with Java 7.
 
 ###Why Zappos JSON is so slow?###
-It's supposed not to. Possibly it is slow for the first time because it does static analyzing on your object graph
-then it generates code, compile, and load the generated class file into memory. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
+It's supposed not to. Possibly, it is slow for the first time because it does static analysis on your object graph then it generates code, compiles, and loads the generated class file into a memory. This process will happen only once for the first time. If you want to speed things up, call `ZapposJson.getInstance().register(className)` before using.
 
 ###Why Zappos JSON doesn't let developer call constructor directly?###
 Zappos JSON uses byte code manipulation. Each instance holds the cache of modified classes with unique name (random name). If developer calls the constructor inside the method, the system will crash very soon because of the notorious
