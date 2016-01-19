@@ -95,6 +95,30 @@ System.out.println(Arrays.toString(foo2.getBar().getValues()));
 - Does not detect circular reference.
 - Bean is required to have public default constructor.
 
+##Benchmark
+Hardware: Intel Core i7-4700HQ 2.40GHz, RAM 16 GB    
+OS: Windows 10 Pro    
+JVM: Oracle Java SE 64-bit 1.8.0_51-b16    
+Benchmark Settings: 1 Fork, 2 Threads, 20 Warm-ups, 20 Iterations
+###Serialize SimpleBean object
+```
+Benchmark             Mode   Cnt     Score     Error  Units
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Boon-0.33             thrpt   20   983.050 ±   6.784  ops/s
+Gson-2.5              thrpt   20  2916.833 ±  10.262  ops/s
+ZapposJson-0.1-alpha  thrpt   20  5780.460 ±  24.628  ops/s
+Jackson-2.7.0         thrpt   20  7747.011 ± 126.501  ops/s
+```
+###Deserialize SimpleBean object
+```
+Benchmark             Mode   Cnt     Score     Error  Units
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Boon-0.33             thrpt   20   603.120 ±   4.530  ops/s
+Gson-2.5              thrpt   20  2404.696 ±  48.962  ops/s
+ZapposJson-0.1-alpha  thrpt   20  2779.093 ±   7.603  ops/s
+Jackson-2.7.0         thrpt   20  4288.297 ±  12.925  ops/s
+```
+
 ##FAQ##
 ###What Java version does it require?
 The project requires Java 8 and later to compile. But, it will run on Java 7.
