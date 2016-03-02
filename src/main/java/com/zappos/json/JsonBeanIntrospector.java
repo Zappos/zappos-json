@@ -39,10 +39,10 @@ import com.zappos.json.util.Reflections;
  */
 public class JsonBeanIntrospector {
   
-  private ZapposJson jacinda;
+  private ZapposJson zapposJson;
   
   public JsonBeanIntrospector(ZapposJson jacinda){
-    this.jacinda = jacinda;
+    this.zapposJson = jacinda;
   }
   
   @SuppressWarnings("unchecked")
@@ -112,7 +112,7 @@ public class JsonBeanIntrospector {
           formatterClass = jsonFormatAnnot.formatter();
           if(formatterClass == NoOpValueFormatter.class){
             //TODO: validate the formatter and type
-            ValueFormatter<?> formatter = jacinda.getValueFormatter(attrType);
+            ValueFormatter<?> formatter = zapposJson.getValueFormatter(attrType);
             if(formatter != null){
               formatterClass = (Class<? extends ValueFormatter<?>>)formatter.getClass();
             }
