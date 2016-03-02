@@ -46,8 +46,8 @@ public class JsonWriter {
   
   protected ZapposJson zapposJson;
 
-  public JsonWriter(ZapposJson jacinda) {
-    this.zapposJson = jacinda;
+  public JsonWriter(ZapposJson zapposJson) {
+    this.zapposJson = zapposJson;
   }
   
   public static void writeString(ZapposJson zapposJson, String value, Writer writer) throws IOException {

@@ -78,5 +78,11 @@ public class SimpleSerializationBenchmark {
     }
   }
   
+  @Benchmark
+  public void serializeUsingHardcode(Blackhole bh) throws Exception {
+    for(SimpleBean bean: beans){
+      bh.consume(SimpleBeanSerializer.toJson(bean));
+    }
+  }
   
 }
