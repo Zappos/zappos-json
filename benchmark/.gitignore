@@ -9,5 +9,3 @@ target/
 .classpath
 .project
 
-src/test/java/testmain/
-src/test/java/com/zappos/json/Scratchpad.java
