@@ -31,7 +31,7 @@
     
     <zappos-json.version>0.1-alpha</zappos-json.version>
     <gson.version>2.5</gson.version>
-    <jackson.version>2.7.0</jackson.version>
+    <jackson.version>2.9.10.4</jackson.version>
     <boon.version>0.33</boon.version>
   </properties>
   
